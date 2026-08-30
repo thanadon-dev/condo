@@ -6,3 +6,5 @@ data/seed.json
 !.env.example
 next-env.d.ts
 CONTEXT.md
+tsconfig.tsbuildinfo
+*.tsbuildinfo

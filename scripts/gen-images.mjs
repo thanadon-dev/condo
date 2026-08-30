@@ -28,8 +28,6 @@ const PALETTES = [
 
 function svg(label, sub, i, n) {
   const [bg, mid, dark] = PALETTES[i % PALETTES.length];
-  const esc = (s) =>
-    String(s).replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" })[c]);
 
   const horizon = 640 + (n % 3) * 40;
   const bx = 260 + (n % 4) * 90;
@@ -49,8 +47,6 @@ function svg(label, sub, i, n) {
   <rect x="${bx - 210}" y="${horizon - bh * 0.5}" width="180" height="${bh * 0.5}" fill="${dark}" opacity="0.18"/>
   <rect x="0" y="${horizon}" width="${W}" height="${H - horizon}" fill="${dark}" opacity="0.12"/>
   <line x1="0" y1="${horizon}" x2="${W}" y2="${horizon}" stroke="${dark}" stroke-width="2" opacity="0.35"/>
-  <text x="80" y="${H - 108}" font-family="Georgia, serif" font-size="58" fill="#141414" opacity="0.82">${esc(label)}</text>
-  <text x="82" y="${H - 58}" font-family="Helvetica, Arial, sans-serif" font-size="24" letter-spacing="4" fill="#141414" opacity="0.5">${esc(sub)}</text>
 </svg>`);
 }
 

@@ -1,145 +1,118 @@
-import { randomBytes, createHash } from "node:crypto";
+import { randomBytes, createHash, timingSafeEqual } from "node:crypto";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { cookies } from "next/headers";
-import { all, one, run } from "./db";
-
+import { one, run } from "./db";
 import { COOKIE, SESSION_DAYS } from "./auth-const";
 
 export { COOKIE };
 
-export type User = {
-  id: number;
-  email: string;
-  name: string;
-  picture: string;
-  is_admin: number;
-  created_at: string;
-  last_login: string | null;
-};
+const CONFIG_PATH =
+  process.env.CONDO_AUTH_CONFIG ||
+  path.join(process.env.HOME || "/home/mark", ".config/condo/auth.json");
 
-type GoogleCfg = { client_id: string; client_secret: string };
-
-let cfgCache: GoogleCfg | null | undefined;
-
-export function googleConfig(): GoogleCfg | null {
-  if (cfgCache !== undefined) return cfgCache;
-  const p =
-    process.env.CONDO_GOOGLE_CONFIG ||
-    path.join(process.env.HOME || "/home/mark", ".config/cursors/google.json");
+function configuredPin(): string {
   try {
-    const c = JSON.parse(readFileSync(p, "utf8")) as GoogleCfg;
-    cfgCache = c.client_id && c.client_secret ? c : null;
+    const c = JSON.parse(readFileSync(CONFIG_PATH, "utf8")) as { pin?: string };
+    return String(c.pin ?? "").trim();
   } catch {
-    cfgCache = null;
+    return "";
   }
-  return cfgCache;
 }
 
 const hash = (s: string) => createHash("sha256").update(s).digest("hex");
 
-export function newState(): string {
-  const s = randomBytes(24).toString("hex");
-  run("DELETE FROM oauth_states WHERE created_at < datetime('now','-15 minutes')");
-  run("INSERT INTO oauth_states (state) VALUES (?)", s);
-  return s;
+function sameSecret(a: string, b: string): boolean {
+  const ba = Buffer.from(hash(a));
+  const bb = Buffer.from(hash(b));
+  return ba.length === bb.length && timingSafeEqual(ba, bb);
 }
 
-export function consumeState(s: string): boolean {
-  if (!s) return false;
-  const row = one<{ state: string }>(
-    "SELECT state FROM oauth_states WHERE state = ? AND created_at > datetime('now','-15 minutes')",
-    s,
+const WINDOW_MINUTES = 15;
+const MAX_FAILS = 8;
+
+export function failCount(): number {
+  return (
+    one<{ c: number }>(
+      `SELECT COUNT(*) AS c FROM login_fails
+       WHERE created_at > datetime('now', ?)`,
+      `-${WINDOW_MINUTES} minutes`,
+    )?.c ?? 0
   );
-  run("DELETE FROM oauth_states WHERE state = ?", s);
-  return Boolean(row);
 }
 
-export function upsertUser(profile: {
-  email: string;
-  name: string;
-  picture: string;
-}): User | null {
-  const email = profile.email.toLowerCase().trim();
-  if (!email) return null;
+export function isLocked(): boolean {
+  return failCount() >= MAX_FAILS;
+}
 
-  const existing = one<User>("SELECT * FROM users WHERE email = ?", email);
+function recordFail(): void {
+  run("INSERT INTO login_fails DEFAULT VALUES");
+  run(
+    "DELETE FROM login_fails WHERE created_at < datetime('now','-1 day')",
+  );
+}
 
-  if (existing) {
-    run(
-      "UPDATE users SET name = ?, picture = ?, last_login = datetime('now') WHERE id = ?",
-      profile.name,
-      profile.picture,
-      existing.id,
-    );
-    return one<User>("SELECT * FROM users WHERE id = ?", existing.id);
+function clearFails(): void {
+  run("DELETE FROM login_fails");
+}
+
+export type LoginResult =
+  | { ok: true; token: string }
+  | { ok: false; reason: "locked" | "wrong" | "unconfigured" };
+
+export function login(pin: string): LoginResult {
+  const expected = configuredPin();
+  if (!expected) return { ok: false, reason: "unconfigured" };
+  if (isLocked()) return { ok: false, reason: "locked" };
+
+  const given = String(pin ?? "").trim().slice(0, 64);
+  if (!given || !sameSecret(given, expected)) {
+    recordFail();
+    return { ok: false, reason: "wrong" };
   }
 
-  const total = one<{ c: number }>("SELECT COUNT(*) AS c FROM users")?.c ?? 0;
-  run(
-    "INSERT INTO users (email,name,picture,is_admin,last_login) VALUES (?,?,?,?,datetime('now'))",
-    email,
-    profile.name,
-    profile.picture,
-    total === 0 ? 1 : 0,
-  );
-  return one<User>("SELECT * FROM users WHERE email = ?", email);
-}
-
-export function createSession(userId: number): string {
+  clearFails();
   const token = randomBytes(32).toString("hex");
   run(
-    `INSERT INTO sessions (token,user_id,expires_at)
-     VALUES (?,?,datetime('now',?))`,
+    "INSERT INTO admin_sessions (token,expires_at) VALUES (?,datetime('now',?))",
     hash(token),
-    userId,
     `+${SESSION_DAYS} days`,
   );
-  run("DELETE FROM sessions WHERE expires_at < datetime('now')");
-  return token;
+  run("DELETE FROM admin_sessions WHERE expires_at < datetime('now')");
+  return { ok: true, token };
 }
 
-export function userByToken(token: string): User | null {
-  if (!token) return null;
-  return one<User>(
-    `SELECT u.* FROM users u
-     JOIN sessions s ON s.user_id = u.id
-     WHERE s.token = ? AND s.expires_at > datetime('now')`,
-    hash(token),
+export function validToken(token: string): boolean {
+  if (!token) return false;
+  return Boolean(
+    one<{ token: string }>(
+      "SELECT token FROM admin_sessions WHERE token = ? AND expires_at > datetime('now')",
+      hash(token),
+    ),
   );
 }
 
 export function destroySession(token: string): void {
-  if (token) run("DELETE FROM sessions WHERE token = ?", hash(token));
+  if (token) run("DELETE FROM admin_sessions WHERE token = ?", hash(token));
 }
 
-export function destroyUserSessions(userId: number): void {
-  run("DELETE FROM sessions WHERE user_id = ?", userId);
-}
-
-export async function currentUser(): Promise<User | null> {
+export async function isAdmin(): Promise<boolean> {
   const jar = await cookies();
-  const token = jar.get(COOKIE)?.value ?? "";
-  return userByToken(token);
+  return validToken(jar.get(COOKIE)?.value ?? "");
 }
 
-export async function requireAdmin(): Promise<User | null> {
-  const u = await currentUser();
-  return u && u.is_admin === 1 ? u : null;
+export async function requireAdmin(): Promise<boolean> {
+  return isAdmin();
 }
 
-export function listUsers(): User[] {
-  return all<User>("SELECT * FROM users ORDER BY id");
+export function sessionCount(): number {
+  return (
+    one<{ c: number }>(
+      "SELECT COUNT(*) AS c FROM admin_sessions WHERE expires_at > datetime('now')",
+    )?.c ?? 0
+  );
 }
 
-export function adminCount(): number {
-  return one<{ c: number }>("SELECT COUNT(*) AS c FROM users WHERE is_admin = 1")
-    ?.c ?? 0;
-}
-
-export function setAdmin(userId: number, on: boolean): boolean {
-  if (!on && adminCount() <= 1) return false;
-  run("UPDATE users SET is_admin = ? WHERE id = ?", on ? 1 : 0, userId);
-  if (!on) destroyUserSessions(userId);
-  return true;
+export function destroyAllSessions(): void {
+  run("DELETE FROM admin_sessions");
 }

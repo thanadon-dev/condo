@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { requireAdmin, setAdmin } from "@/lib/auth";
+import { requireAdmin } from "@/lib/auth";
 import { run, one } from "@/lib/db";
 import { slugify, uniqueSlug } from "@/lib/slug";
 import { all } from "@/lib/db";
@@ -21,7 +21,7 @@ const num = (v: FormDataEntryValue | null, def = 0) => {
 };
 
 async function guard(): Promise<boolean> {
-  return Boolean(await requireAdmin());
+  return requireAdmin();
 }
 
 function takenSlugs(table: string, exceptId: number | null): Set<string> {
@@ -325,22 +325,4 @@ export async function setLeadStatus(
   }
 }
 
-export async function toggleAdmin(
-  _prev: ActionState,
-  form: FormData,
-): Promise<ActionState> {
-  const me = await requireAdmin();
-  if (!me) return { ok: false, message: "ไม่มีสิทธิ์" };
 
-  const id = num(form.get("id"), 0);
-  const on = form.get("on") === "1";
-  if (!id) return { ok: false, message: "ไม่พบผู้ใช้" };
-  if (id === me.id && !on)
-    return { ok: false, message: "ถอนสิทธิ์ตัวเองไม่ได้" };
-
-  if (!setAdmin(id, on))
-    return { ok: false, message: "ต้องมีผู้ดูแลอย่างน้อย 1 คน" };
-
-  revalidatePath("/admin/users");
-  return { ok: true, message: on ? "ให้สิทธิ์แล้ว" : "ถอนสิทธิ์แล้ว" };
-}

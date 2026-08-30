@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { requireAdmin } from "@/lib/auth";
+import { doLogout } from "@/app/actions/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +17,6 @@ const NAV = [
   { href: "/admin/deals", label: "ผลงาน" },
   { href: "/admin/articles", label: "บทความ" },
   { href: "/admin/leads", label: "ลูกค้า" },
-  { href: "/admin/users", label: "ผู้ดูแล" },
 ];
 
 export default async function AdminLayout({
@@ -24,8 +24,7 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const user = await requireAdmin();
-  if (!user) redirect("/login");
+  if (!(await requireAdmin())) redirect("/login");
 
   return (
     <div className="mx-auto max-w-[1240px] px-6 py-12">
@@ -34,15 +33,14 @@ export default async function AdminLayout({
           <div className="kicker">Admin Console</div>
           <h1 className="display th text-[32px] mt-2">จัดการเนื้อหา</h1>
         </div>
-        <div className="flex items-center gap-4">
-          <span className="th text-[12.5px] text-muted">{user.email}</span>
+        <div className="flex items-center gap-3">
           <Link
             href="/"
             className="th text-[12.5px] px-4 py-2.5 border border-line-2 hover:border-ink transition-colors"
           >
             ดูหน้าเว็บ
           </Link>
-          <form action="/auth/logout" method="post">
+          <form action={doLogout}>
             <button className="th text-[12.5px] px-4 py-2.5 border border-line-2 hover:border-ink transition-colors">
               ออกจากระบบ
             </button>

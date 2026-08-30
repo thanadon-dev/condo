@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, Jost, Noto_Sans_Thai } from "next/font/google";
 import "./globals.css";
 import { SITE, SITE_URL } from "@/lib/site";
-import SiteHeader from "@/components/SiteHeader";
-import SiteFooter from "@/components/SiteFooter";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -52,11 +50,7 @@ export default function RootLayout({
       lang="th"
       className={`${cormorant.variable} ${jost.variable} ${notoThai.variable}`}
     >
-      <body className="min-h-screen flex flex-col">
-        <SiteHeader />
-        <main className="flex-1">{children}</main>
-        <SiteFooter />
-      </body>
+      <body className="min-h-screen flex flex-col">{children}</body>
     </html>
   );
 }

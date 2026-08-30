@@ -4,23 +4,20 @@
 @theme {
   --color-ink: #141414;
   --color-ink-2: #3d3b38;
-  --color-muted: #6f6c66;
-  --color-faint: #cfccc6;
-  --color-line: #e2e0db;
-  --color-line-2: #f0efec;
+  --color-muted: #6b6862;
+  --color-dim: #8a8783;
+  --color-faint: #a8a5a0;
+  --color-line: #dcdad5;
+  --color-line-2: #ecece8;
   --color-sand: #f4f3f0;
+  --color-sand-2: #f7f6f4;
   --color-paper: #ffffff;
 
   --font-display: var(--font-cormorant), Georgia, serif;
   --font-sans: var(--font-jost), var(--font-noto-thai), sans-serif;
-  --font-thai: var(--font-noto-thai), sans-serif;
-
-  --tracking-kicker: 0.18em;
 }
 
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
 body {
   background: var(--color-paper);
@@ -29,20 +26,46 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+.wrap { max-width: 1280px; margin-inline: auto; padding-inline: 44px; }
+@media (max-width: 640px) { .wrap { padding-inline: 22px; } }
+
 .kicker {
   font-family: var(--font-jost), sans-serif;
-  font-size: 11px;
-  letter-spacing: 0.18em;
+  font-size: 10px;
+  letter-spacing: 0.42em;
   text-transform: uppercase;
-  color: var(--color-muted);
+  color: var(--color-dim);
 }
 
 .display {
-  font-family: var(--font-cormorant), Georgia, serif;
+  font-family: var(--font-cormorant), var(--font-noto-thai), Georgia, serif;
   font-weight: 300;
-  line-height: 1.15;
+  letter-spacing: -0.01em;
 }
 
-.th {
-  font-family: var(--font-noto-thai), sans-serif;
+.serif {
+  font-family: var(--font-cormorant), var(--font-noto-thai), Georgia, serif;
 }
+
+.th { font-family: var(--font-noto-thai), sans-serif; }
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  height: 14px;
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-runnable-track { height: 2px; background: #dcdad5; }
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: #141414; margin-top: -6px;
+}
+input[type="range"]::-moz-range-track { height: 2px; background: #dcdad5; }
+input[type="range"]::-moz-range-thumb {
+  width: 14px; height: 14px; border: 0; border-radius: 50%; background: #141414;
+}
+
+@keyframes cdRise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.rise { animation: cdRise 0.5s both; }
