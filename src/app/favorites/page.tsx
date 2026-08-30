@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Section } from "@/components/Section";
 import FavoritesList from "@/components/FavoritesList";
-import { listProperties } from "@/lib/queries";
+import { listProperties, coverMap } from "@/lib/queries";
 
 export const revalidate = 3600;
 
@@ -19,7 +19,10 @@ export default function FavoritesPage() {
       title="รายการโปรด"
       sub="เก็บไว้ในเครื่องของคุณเท่านั้น ไม่ได้ส่งขึ้นเซิร์ฟเวอร์"
     >
-      <FavoritesList all={listProperties()} />
+      <FavoritesList
+        all={listProperties()}
+        covers={coverMap(listProperties().map((p) => p.id))}
+      />
     </Section>
   );
 }

@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { Section } from "@/components/Section";
 import PropertyCard from "@/components/PropertyCard";
-import { listAreas, propertiesInArea } from "@/lib/queries";
+import { listAreas, propertiesInArea, coverMap } from "@/lib/queries";
 import { decodeSlug } from "@/lib/route";
 
 export const revalidate = 3600;
@@ -42,6 +42,7 @@ export default async function AreaPage({
   if (!a) notFound();
 
   const items = propertiesInArea(a);
+  const covers = coverMap(items.map((p) => p.id));
 
   return (
     <Section
@@ -51,8 +52,13 @@ export default async function AreaPage({
     >
       {items.length > 0 ? (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {items.map((p) => (
-            <PropertyCard key={p.id} p={p} />
+          {items.map((p, i) => (
+            <PropertyCard
+              key={p.id}
+              p={p}
+              cover={covers[p.id]}
+              priority={i < 3}
+            />
           ))}
         </div>
       ) : (

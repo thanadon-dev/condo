@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Section } from "@/components/Section";
 import PropertyCard from "@/components/PropertyCard";
 import FilterBar from "@/components/FilterBar";
-import { searchProperties, propertyFacets } from "@/lib/queries";
+import { searchProperties, propertyFacets, coverMap } from "@/lib/queries";
 import { parseFilters, isFiltered, describeFilters } from "@/lib/filters";
 
 export const revalidate = 3600;
@@ -37,6 +37,7 @@ async function Results({ searchParams }: { searchParams: SP }) {
   const f = parseFilters(sp);
   const facets = propertyFacets();
   const items = searchProperties(f);
+  const covers = coverMap(items.map((p) => p.id));
 
   return (
     <>
@@ -51,8 +52,13 @@ async function Results({ searchParams }: { searchParams: SP }) {
 
       {items.length > 0 ? (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 mt-8">
-          {items.map((p) => (
-            <PropertyCard key={p.id} p={p} />
+          {items.map((p, i) => (
+            <PropertyCard
+              key={p.id}
+              p={p}
+              cover={covers[p.id]}
+              priority={i < 3}
+            />
           ))}
         </div>
       ) : (

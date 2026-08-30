@@ -27,6 +27,14 @@ export type Property = {
   updated_at: string;
 };
 
+export type PropertyImage = {
+  id: number;
+  property_id: number;
+  url: string;
+  alt: string;
+  sort: number;
+};
+
 export type Area = {
   id: number;
   slug: string;
@@ -95,6 +103,25 @@ export function articleBySlug(slug: string): Article | null {
     "SELECT * FROM articles WHERE slug = ? AND published = 1",
     slug,
   );
+}
+
+export function imagesOf(propertyId: number): PropertyImage[] {
+  return all<PropertyImage>(
+    "SELECT * FROM property_images WHERE property_id = ? ORDER BY sort, id",
+    propertyId,
+  );
+}
+
+export function coverMap(ids: number[]): Record<number, PropertyImage> {
+  if (ids.length === 0) return {};
+  const marks = ids.map(() => "?").join(",");
+  const rows = all<PropertyImage>(
+    `SELECT * FROM property_images WHERE property_id IN (${marks}) ORDER BY property_id, sort, id`,
+    ...ids,
+  );
+  const out: Record<number, PropertyImage> = {};
+  for (const r of rows) if (!out[r.property_id]) out[r.property_id] = r;
+  return out;
 }
 
 export function amenitiesOf(p: Property): string[] {

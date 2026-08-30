@@ -2,11 +2,13 @@ import Link from "next/link";
 import { Section } from "@/components/Section";
 import PropertyCard from "@/components/PropertyCard";
 import HeroSearch from "@/components/HeroSearch";
+import Image from "next/image";
 import {
   listProperties,
   areasWithCount,
   listArticles,
   siteStats,
+  coverMap,
 } from "@/lib/queries";
 import { SITE, SITE_URL } from "@/lib/site";
 
@@ -17,6 +19,8 @@ export default function Home() {
   const areas = areasWithCount();
   const articles = listArticles().slice(0, 2);
   const stats = siteStats();
+  const featured = items.slice(0, 6);
+  const covers = coverMap(featured.map((p) => p.id));
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -61,8 +65,13 @@ export default function Home() {
         sub={`ทั้งหมด ${items.length} รายการในระบบ`}
       >
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {items.slice(0, 6).map((p) => (
-            <PropertyCard key={p.id} p={p} />
+          {featured.map((p, i) => (
+            <PropertyCard
+              key={p.id}
+              p={p}
+              cover={covers[p.id]}
+              priority={i < 3}
+            />
           ))}
         </div>
 
@@ -83,11 +92,24 @@ export default function Home() {
               <Link
                 key={a.id}
                 href={`/area/${a.slug}`}
-                className="block bg-paper border border-line-2 hover:border-line transition-colors p-7"
+                className="group block bg-paper border border-line-2 hover:border-line transition-colors overflow-hidden"
               >
-                <div className="th text-[19px] font-medium">{a.name}</div>
-                <div className="th mt-2 text-[12.5px] text-muted">
-                  {a.count} รายการ
+                <div className="relative aspect-[16/10] bg-sand overflow-hidden">
+                  {a.cover && (
+                    <Image
+                      src={a.cover}
+                      alt={`ทำเล${a.name}`}
+                      fill
+                      sizes="(max-width: 640px) 100vw, 33vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                    />
+                  )}
+                </div>
+                <div className="p-6">
+                  <div className="th text-[19px] font-medium">{a.name}</div>
+                  <div className="th mt-1.5 text-[12.5px] text-muted">
+                    {a.count} รายการ
+                  </div>
                 </div>
               </Link>
             ))}

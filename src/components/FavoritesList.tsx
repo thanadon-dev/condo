@@ -2,10 +2,16 @@
 
 import Link from "next/link";
 import { useFavorites } from "@/lib/useFavorites";
-import type { Property } from "@/lib/queries";
+import type { Property, PropertyImage } from "@/lib/queries";
 import PropertyCard from "@/components/PropertyCard";
 
-export default function FavoritesList({ all }: { all: Property[] }) {
+export default function FavoritesList({
+  all,
+  covers,
+}: {
+  all: Property[];
+  covers: Record<number, PropertyImage>;
+}) {
   const { ids, clear } = useFavorites();
   const items = all.filter((p) => ids.includes(p.id));
 
@@ -42,7 +48,7 @@ export default function FavoritesList({ all }: { all: Property[] }) {
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {items.map((p) => (
-          <PropertyCard key={p.id} p={p} />
+          <PropertyCard key={p.id} p={p} cover={covers[p.id]} />
         ))}
       </div>
     </>

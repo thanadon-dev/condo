@@ -5,7 +5,9 @@ import {
   listProperties,
   propertyBySlug,
   amenitiesOf,
+  imagesOf,
 } from "@/lib/queries";
+import Gallery from "@/components/Gallery";
 import { baht, SITE } from "@/lib/site";
 import { decodeSlug } from "@/lib/route";
 
@@ -43,6 +45,7 @@ export default async function PropertyPage({
   if (!p) notFound();
 
   const amenities = amenitiesOf(p);
+  const images = imagesOf(p.id);
   const specs = [
     { k: "ประเภท", v: p.type },
     { k: "ห้องนอน", v: String(p.beds) },
@@ -111,8 +114,8 @@ export default async function PropertyPage({
           </div>
         </header>
 
-        <div className="aspect-[16/9] bg-sand mt-10 flex items-center justify-center">
-          <span className="kicker text-faint">Gallery — Phase 3</span>
+        <div className="mt-10">
+          <Gallery images={images} />
         </div>
 
         <div className="grid gap-14 lg:grid-cols-[1fr_340px] mt-14 pb-10">
