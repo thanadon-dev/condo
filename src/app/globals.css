@@ -1,26 +1,47 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-ink: #141414;
+  --color-ink-2: #3d3b38;
+  --color-muted: #6f6c66;
+  --color-faint: #cfccc6;
+  --color-line: #e2e0db;
+  --color-line-2: #f0efec;
+  --color-sand: #f4f3f0;
+  --color-paper: #ffffff;
+
+  --font-display: var(--font-cormorant), Georgia, serif;
+  --font-sans: var(--font-jost), var(--font-noto-thai), sans-serif;
+  --font-thai: var(--font-noto-thai), sans-serif;
+
+  --tracking-kicker: 0.18em;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-jost), var(--font-noto-thai), sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.kicker {
+  font-family: var(--font-jost), sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.display {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-weight: 300;
+  line-height: 1.15;
+}
+
+.th {
+  font-family: var(--font-noto-thai), sans-serif;
 }
