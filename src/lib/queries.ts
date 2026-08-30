@@ -35,6 +35,16 @@ export type PropertyImage = {
   sort: number;
 };
 
+export type Poi = {
+  id: number;
+  property_id: number;
+  name: string;
+  category: string;
+  lat: number;
+  lng: number;
+  distance_m: number;
+};
+
 export type Area = {
   id: number;
   slug: string;
@@ -122,6 +132,62 @@ export function coverMap(ids: number[]): Record<number, PropertyImage> {
   const out: Record<number, PropertyImage> = {};
   for (const r of rows) if (!out[r.property_id]) out[r.property_id] = r;
   return out;
+}
+
+export function poisOf(propertyId: number): Poi[] {
+  return all<Poi>(
+    "SELECT * FROM property_pois WHERE property_id = ? ORDER BY distance_m, id",
+    propertyId,
+  );
+}
+
+const EARTH_KM = 6371;
+
+export function haversineKm(
+  aLat: number,
+  aLng: number,
+  bLat: number,
+  bLng: number,
+): number {
+  const toRad = (d: number) => (d * Math.PI) / 180;
+  const dLat = toRad(bLat - aLat);
+  const dLng = toRad(bLng - aLng);
+  const s =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(aLat)) * Math.cos(toRad(bLat)) * Math.sin(dLng / 2) ** 2;
+  return 2 * EARTH_KM * Math.asin(Math.min(1, Math.sqrt(s)));
+}
+
+export function nearbyProperties(
+  p: Property,
+  radiusKm = 4,
+  limit = 3,
+): (Property & { distanceKm: number })[] {
+  if (p.lat === null || p.lng === null) return [];
+
+  const dLat = radiusKm / 111;
+  const dLng = radiusKm / (111 * Math.cos((p.lat * Math.PI) / 180) || 1);
+
+  const rows = all<Property>(
+    `SELECT * FROM properties
+     WHERE published = 1 AND id != ?
+       AND lat IS NOT NULL AND lng IS NOT NULL
+       AND lat BETWEEN ? AND ? AND lng BETWEEN ? AND ?`,
+    p.id,
+    p.lat - dLat,
+    p.lat + dLat,
+    p.lng - dLng,
+    p.lng + dLng,
+  );
+
+  return rows
+    .map((r) => ({
+      ...r,
+      distanceKm: haversineKm(p.lat!, p.lng!, r.lat!, r.lng!),
+    }))
+    .filter((r) => r.distanceKm <= radiusKm)
+    .sort((a, b) => a.distanceKm - b.distanceKm)
+    .slice(0, limit);
 }
 
 export function amenitiesOf(p: Property): string[] {

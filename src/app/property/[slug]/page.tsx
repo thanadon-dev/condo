@@ -6,8 +6,13 @@ import {
   propertyBySlug,
   amenitiesOf,
   imagesOf,
+  poisOf,
+  nearbyProperties,
+  coverMap,
 } from "@/lib/queries";
 import Gallery from "@/components/Gallery";
+import LocationSection from "@/components/LocationSection";
+import PropertyCard from "@/components/PropertyCard";
 import { baht, SITE } from "@/lib/site";
 import { decodeSlug } from "@/lib/route";
 
@@ -46,6 +51,9 @@ export default async function PropertyPage({
 
   const amenities = amenitiesOf(p);
   const images = imagesOf(p.id);
+  const pois = poisOf(p.id);
+  const nearby = nearbyProperties(p);
+  const nearbyCovers = coverMap(nearby.map((n) => n.id));
   const specs = [
     { k: "ประเภท", v: p.type },
     { k: "ห้องนอน", v: String(p.beds) },
@@ -63,6 +71,15 @@ export default async function PropertyPage({
     name: p.title,
     description: p.descr,
     address: { "@type": "PostalAddress", streetAddress: p.location },
+    ...(p.lat !== null && p.lng !== null
+      ? {
+          geo: {
+            "@type": "GeoCoordinates",
+            latitude: p.lat,
+            longitude: p.lng,
+          },
+        }
+      : {}),
     numberOfRooms: p.beds,
     floorSize: { "@type": "QuantitativeValue", value: p.area, unitCode: "MTK" },
     offers: {
@@ -159,10 +176,13 @@ export default async function PropertyPage({
               </>
             )}
 
-            <h2 className="display text-[30px] th mt-14">ทำเลและการเดินทาง</h2>
-            <div className="mt-5 aspect-[16/9] bg-sand flex items-center justify-center">
-              <span className="kicker text-faint">Map — Phase 4</span>
-            </div>
+            <LocationSection
+              lat={p.lat}
+              lng={p.lng}
+              title={p.title}
+              district={p.district}
+              pois={pois}
+            />
           </div>
 
           <aside className="lg:sticky lg:top-[100px] h-fit border border-line-2 p-7">
@@ -193,6 +213,32 @@ export default async function PropertyPage({
             </p>
           </aside>
         </div>
+
+        {nearby.length > 0 && (
+          <section className="border-t border-line-2 pt-14 pb-6">
+            <div className="kicker">Nearby</div>
+            <h2 className="display text-[32px] th mt-2.5">
+              อสังหาฯ ในพื้นที่ใกล้เคียง
+            </h2>
+            <p className="th mt-2 text-[13.5px] text-muted">
+              รอบ {p.district} ในรัศมี 4 กม.
+            </p>
+
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 mt-8">
+              {nearby.map((n) => (
+                <div key={n.id} className="relative">
+                  <span className="absolute right-3 top-[calc(75%-2.6rem)] z-20 bg-ink/85 text-paper th text-[11.5px] px-2.5 py-1.5 pointer-events-none">
+                    ห่าง{" "}
+                    {n.distanceKm < 1
+                      ? `${Math.round(n.distanceKm * 1000)} ม.`
+                      : `${n.distanceKm.toFixed(1)} กม.`}
+                  </span>
+                  <PropertyCard p={n} cover={nearbyCovers[n.id]} />
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </>
   );
