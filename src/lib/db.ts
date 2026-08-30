@@ -18,6 +18,7 @@ export function db(): DatabaseSync {
     "schema.sql",
     "schema-002-pois.sql",
     "schema-003-leads.sql",
+    "schema-004-auth.sql",
   ]) {
     conn.exec(readFileSync(path.join(process.cwd(), "src/lib", f), "utf8"));
   }
