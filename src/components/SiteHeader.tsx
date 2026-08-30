@@ -6,6 +6,7 @@ const NAV = [
   { href: "/properties", label: "ทรัพย์ทั้งหมด" },
   { href: "/journal", label: "บทความ" },
   { href: "/about", label: "เกี่ยวกับฉัน" },
+  { href: "/favorites", label: "รายการโปรด" },
 ];
 
 export default function SiteHeader() {

@@ -23,11 +23,15 @@ export function db(): DatabaseSync {
   return conn;
 }
 
+function plain<T>(row: unknown): T {
+  return Object.assign({}, row) as T;
+}
+
 export function all<T = Record<string, unknown>>(
   sql: string,
   ...params: (string | number | null)[]
 ): T[] {
-  return db().prepare(sql).all(...params) as T[];
+  return (db().prepare(sql).all(...params) as unknown[]).map((r) => plain<T>(r));
 }
 
 export function one<T = Record<string, unknown>>(
@@ -35,7 +39,7 @@ export function one<T = Record<string, unknown>>(
   ...params: (string | number | null)[]
 ): T | null {
   const row = db().prepare(sql).get(...params);
-  return (row as T) ?? null;
+  return row == null ? null : plain<T>(row);
 }
 
 export function run(

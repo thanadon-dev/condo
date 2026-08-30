@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { Section } from "@/components/Section";
 import PropertyCard from "@/components/PropertyCard";
-import { listAreas, listProperties } from "@/lib/queries";
+import { listAreas, propertiesInArea } from "@/lib/queries";
 import { decodeSlug } from "@/lib/route";
 
 export const revalidate = 3600;
@@ -41,10 +41,7 @@ export default async function AreaPage({
   const a = areaBySlug(slug);
   if (!a) notFound();
 
-  const q = a.query.trim();
-  const items = listProperties().filter(
-    (p) => p.district.includes(q) || p.location.includes(q),
-  );
+  const items = propertiesInArea(a);
 
   return (
     <Section
