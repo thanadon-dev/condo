@@ -1,5 +1,10 @@
 import type { MetadataRoute } from "next";
-import { listProperties, listArticles, listAreas } from "@/lib/queries";
+import {
+  listProperties,
+  listArticles,
+  listAreas,
+  listDeals,
+} from "@/lib/queries";
 import { absolute } from "@/lib/site";
 
 export const revalidate = 3600;
@@ -33,5 +38,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...statics, ...props, ...areas, ...arts];
+  const deals = listDeals().map((d) => ({
+    url: absolute(`/deal/${d.slug}`),
+    lastModified: new Date(d.closed_on),
+    priority: 0.5,
+  }));
+
+  return [...statics, ...props, ...areas, ...arts, ...deals];
 }

@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { listArticles, articleBySlug } from "@/lib/queries";
+import { listArticles, articleBySlug, relatedArticles } from "@/lib/queries";
+import LeadForm from "@/components/LeadForm";
 import { thaiDate, SITE, SITE_URL } from "@/lib/site";
 import { decodeSlug } from "@/lib/route";
 
@@ -43,6 +44,7 @@ export default async function ArticlePage({
   if (!a) notFound();
 
   const paras = a.body.split(/\n{2,}/).filter(Boolean);
+  const related = relatedArticles(a);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -81,6 +83,43 @@ export default async function ArticlePage({
             </p>
           ))}
         </div>
+
+        <section className="mt-16 pt-12 border-t border-line-2">
+          <div className="kicker">Enquiry</div>
+          <h2 className="display text-[28px] th mt-2.5">
+            มีทรัพย์ที่อยากปล่อยเช่าอยู่หรือเปล่า
+          </h2>
+          <p className="th mt-2 text-[13.5px] text-muted">
+            ส่งรายละเอียดห้องมาได้ ผมประเมินราคาเช่าที่ปิดได้จริงให้ก่อนตัดสินใจ
+          </p>
+          <div className="mt-8">
+            <LeadForm
+              source={`/journal/${a.slug}`}
+              defaultKind="ประเมินราคา"
+              compact
+            />
+          </div>
+        </section>
+
+        {related.length > 0 && (
+          <section className="mt-16 pt-12 border-t border-line-2">
+            <div className="kicker">อ่านต่อ</div>
+            <div className="grid gap-5 sm:grid-cols-2 mt-6">
+              {related.map((r) => (
+                <Link
+                  key={r.id}
+                  href={`/journal/${r.slug}`}
+                  className="group block border border-line-2 hover:border-line transition-colors p-6"
+                >
+                  <div className="kicker">{r.tag}</div>
+                  <h3 className="th mt-2.5 text-[16px] font-medium leading-snug group-hover:underline underline-offset-4 decoration-line">
+                    {r.title}
+                  </h3>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
       </article>
     </>
   );

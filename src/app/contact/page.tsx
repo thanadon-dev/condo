@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Section } from "@/components/Section";
+import LeadForm from "@/components/LeadForm";
 import { SITE } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -15,33 +16,35 @@ export default function ContactPage() {
       title="ติดต่อเช่า"
       sub="ส่งรายละเอียดห้องมาได้ ผมประเมินราคาเช่าที่ปิดได้จริงให้ก่อนตัดสินใจ"
     >
-      <div className="grid gap-6 sm:grid-cols-2 max-w-[720px]">
-        <a
-          href={`tel:${SITE.mobile.replace(/\s/g, "")}`}
-          className="border border-line-2 hover:border-ink transition-colors p-7"
-        >
-          <div className="kicker">โทรศัพท์</div>
-          <div className="th mt-3 text-[19px]">{SITE.mobile}</div>
-        </a>
-        <div className="border border-line-2 p-7">
-          <div className="kicker">LINE</div>
-          <div className="th mt-3 text-[19px]">{SITE.line}</div>
+      <div className="grid gap-14 lg:grid-cols-[1fr_320px]">
+        <div className="max-w-[640px]">
+          <LeadForm source="/contact" defaultKind="ฝากปล่อยเช่า" />
         </div>
-        <div className="border border-line-2 p-7">
-          <div className="kicker">อีเมล</div>
-          <div className="th mt-3 text-[16px]">{SITE.email}</div>
-        </div>
-        <div className="border border-line-2 p-7">
-          <div className="kicker">ออฟฟิศ</div>
-          <div className="th mt-3 text-[14px] leading-relaxed">
-            {SITE.address}
-          </div>
-        </div>
-      </div>
 
-      <p className="th mt-8 text-[13px] text-muted">
-        ฟอร์มส่งข้อมูลและระบบเก็บ lead จะเปิดใน Phase 5
-      </p>
+        <aside className="space-y-3 h-fit">
+          <a
+            href={`tel:${SITE.mobile.replace(/\s/g, "")}`}
+            className="block border border-line-2 hover:border-ink transition-colors p-6"
+          >
+            <div className="kicker">โทรศัพท์</div>
+            <div className="th mt-2.5 text-[18px]">{SITE.mobile}</div>
+          </a>
+          <div className="border border-line-2 p-6">
+            <div className="kicker">LINE</div>
+            <div className="th mt-2.5 text-[18px]">{SITE.line}</div>
+          </div>
+          <div className="border border-line-2 p-6">
+            <div className="kicker">อีเมล</div>
+            <div className="th mt-2.5 text-[14.5px]">{SITE.email}</div>
+          </div>
+          <div className="border border-line-2 p-6">
+            <div className="kicker">ออฟฟิศ</div>
+            <div className="th mt-2.5 text-[13.5px] leading-relaxed">
+              {SITE.address}
+            </div>
+          </div>
+        </aside>
+      </div>
     </Section>
   );
 }

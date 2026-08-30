@@ -14,7 +14,11 @@ export function db(): DatabaseSync {
   const conn = new DatabaseSync(path.join(DATA_DIR, "condo.db"));
   conn.exec("PRAGMA journal_mode = WAL");
   conn.exec("PRAGMA foreign_keys = ON");
-  for (const f of ["schema.sql", "schema-002-pois.sql"]) {
+  for (const f of [
+    "schema.sql",
+    "schema-002-pois.sql",
+    "schema-003-leads.sql",
+  ]) {
     conn.exec(readFileSync(path.join(process.cwd(), "src/lib", f), "utf8"));
   }
   handle = conn;

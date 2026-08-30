@@ -102,6 +102,40 @@ export function listDeals(): Deal[] {
   );
 }
 
+export function dealBySlug(slug: string): Deal | null {
+  return one<Deal>(
+    "SELECT * FROM deals WHERE slug = ? AND published = 1",
+    slug,
+  );
+}
+
+export function dealCats(): { value: string; count: number }[] {
+  return all<{ value: string; count: number }>(
+    "SELECT cat AS value, COUNT(*) AS count FROM deals WHERE published = 1 GROUP BY cat ORDER BY count DESC",
+  );
+}
+
+export function articleTags(): { value: string; count: number }[] {
+  return all<{ value: string; count: number }>(
+    "SELECT tag AS value, COUNT(*) AS count FROM articles WHERE published = 1 AND tag != '' GROUP BY tag ORDER BY count DESC",
+  );
+}
+
+export function relatedArticles(a: Article, limit = 2): Article[] {
+  const sameTag = all<Article>(
+    "SELECT * FROM articles WHERE published = 1 AND id != ? AND tag = ? ORDER BY published_on DESC LIMIT ?",
+    a.id,
+    a.tag,
+    limit,
+  );
+  if (sameTag.length >= limit) return sameTag;
+  const seen = new Set([a.id, ...sameTag.map((x) => x.id)]);
+  const rest = all<Article>(
+    "SELECT * FROM articles WHERE published = 1 ORDER BY published_on DESC LIMIT 10",
+  ).filter((x) => !seen.has(x.id));
+  return [...sameTag, ...rest].slice(0, limit);
+}
+
 export function listArticles(): Article[] {
   return all<Article>(
     "SELECT * FROM articles WHERE published = 1 ORDER BY published_on DESC",

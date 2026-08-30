@@ -13,6 +13,7 @@ import {
 import Gallery from "@/components/Gallery";
 import LocationSection from "@/components/LocationSection";
 import PropertyCard from "@/components/PropertyCard";
+import LeadForm from "@/components/LeadForm";
 import { baht, SITE } from "@/lib/site";
 import { decodeSlug } from "@/lib/route";
 
@@ -194,12 +195,12 @@ export default async function PropertyPage({
               {SITE.agent.role} · ใบอนุญาต {SITE.agent.license}
             </div>
 
-            <Link
-              href="/contact"
+            <a
+              href="#lead"
               className="block text-center th text-[13.5px] mt-7 px-6 py-[14px] bg-ink text-paper hover:opacity-85 transition-opacity"
             >
               นัดชมบ้าน
-            </Link>
+            </a>
             <a
               href={`tel:${SITE.mobile.replace(/\s/g, "")}`}
               className="block text-center th text-[13.5px] mt-3 px-6 py-[14px] border border-line hover:border-ink transition-colors"
@@ -213,6 +214,22 @@ export default async function PropertyPage({
             </p>
           </aside>
         </div>
+
+        <section id="lead" className="border-t border-line-2 pt-14 pb-6 scroll-mt-[90px]">
+          <div className="kicker">Enquiry</div>
+          <h2 className="display text-[32px] th mt-2.5">สนใจทรัพย์นี้</h2>
+          <p className="th mt-2 text-[13.5px] text-muted">
+            ฝากเบอร์ไว้ได้เลย ผมติดต่อกลับพร้อมข้อมูลค่าส่วนกลางและเงื่อนไขจริง
+          </p>
+          <div className="max-w-[640px] mt-8">
+            <LeadForm
+              propertyId={p.id}
+              propertyTitle={`${p.title} (${p.code})`}
+              source={`/property/${p.slug}`}
+              defaultKind="นัดชมบ้าน"
+            />
+          </div>
+        </section>
 
         {nearby.length > 0 && (
           <section className="border-t border-line-2 pt-14 pb-6">
