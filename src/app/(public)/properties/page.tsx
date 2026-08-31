@@ -6,6 +6,8 @@ import PropertyCard from "@/components/PropertyCard";
 import FilterBar from "@/components/FilterBar";
 import { searchProperties, propertyFacets, coverMap } from "@/lib/queries";
 import { parseFilters, isFiltered, describeFilters } from "@/lib/filters";
+import JsonLd from "@/components/JsonLd";
+import { itemList, breadcrumb } from "@/lib/jsonld";
 
 export const revalidate = 3600;
 
@@ -41,6 +43,10 @@ async function Results({ searchParams }: { searchParams: SP }) {
 
   return (
     <>
+      <JsonLd
+        id="ld-props"
+        data={itemList(items, (p) => `/property/${p.slug}`)}
+      />
       <FilterBar
         cats={facets.cats}
         types={facets.types}
@@ -82,6 +88,7 @@ async function Results({ searchParams }: { searchParams: SP }) {
 export default function PropertiesPage({ searchParams }: { searchParams: SP }) {
   return (
     <Section
+      as="h1"
       kicker="Properties"
       title="ทรัพย์ทั้งหมด"
       sub="กรองตามหมวดหมู่ ประเภท ห้องนอน และช่วงราคา — เงื่อนไขถูกเก็บไว้ใน URL แชร์ต่อได้"

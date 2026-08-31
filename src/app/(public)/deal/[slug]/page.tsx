@@ -25,7 +25,26 @@ export async function generateMetadata({
     title: d.title,
     description: d.body.slice(0, 160),
     alternates: { canonical: `/deal/${d.slug}` },
-    openGraph: { title: d.title, description: d.body.slice(0, 160) },
+    openGraph: {
+      title: d.title,
+      description: d.body.slice(0, 160),
+      type: "article",
+      url: `/deal/${d.slug}`,
+      images: [
+        {
+          url: "/media/hero-mock.webp",
+          width: 1200,
+          height: 630,
+          alt: d.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: d.title,
+      description: d.body.slice(0, 160),
+      images: ["/media/hero-mock.webp"],
+    },
   };
 }
 

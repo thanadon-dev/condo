@@ -34,7 +34,22 @@ export async function generateMetadata({
       title: a.title,
       description: a.lead,
       type: "article",
+      url: `/journal/${a.slug}`,
       publishedTime: a.published_on,
+      images: [
+        {
+          url: "/media/hero-mock.webp",
+          width: 1200,
+          height: 630,
+          alt: a.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: a.title,
+      description: a.lead,
+      images: ["/media/hero-mock.webp"],
     },
   };
 }

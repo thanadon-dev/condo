@@ -4,22 +4,26 @@ export function Section({
   sub,
   children,
   className = "",
+  as = "h2",
 }: {
   kicker?: string;
   title?: string;
   sub?: string;
   children?: React.ReactNode;
   className?: string;
+  /** ใช้ "h1" เมื่อหัวเรื่องนี้คือหัวเรื่องหลักของหน้า (ทุกหน้าต้องมี h1 เดียว) */
+  as?: "h1" | "h2";
 }) {
+  const Heading = as;
   return (
     <section className={`mx-auto max-w-[1240px] px-6 py-20 ${className}`}>
       {(kicker || title) && (
         <header className="mb-10">
           {kicker && <div className="kicker">{kicker}</div>}
           {title && (
-            <h2 className="display text-[38px] md:text-[46px] mt-2.5 th">
+            <Heading className="display text-[38px] md:text-[46px] mt-2.5 th">
               {title}
-            </h2>
+            </Heading>
           )}
           {sub && (
             <p className="th mt-3 text-[14px] text-muted max-w-[560px] leading-relaxed">

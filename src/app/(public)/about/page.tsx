@@ -7,6 +7,9 @@ import LeadForm from "@/components/LeadForm";
 import { listDeals, dealCats } from "@/lib/queries";
 import { SITE, thaiDate } from "@/lib/site";
 import { getSettings } from "@/lib/settings";
+import JsonLd from "@/components/JsonLd";
+import { breadcrumb } from "@/lib/jsonld";
+import { absolute, SITE_URL } from "@/lib/site";
 
 export const revalidate = 3600;
 
@@ -65,9 +68,37 @@ export default function AboutPage({ searchParams }: { searchParams: SP }) {
   const deals = listDeals();
   const rent = deals.filter((d) => d.cat !== "ขายขาด").length;
 
+  const profileLd = {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    url: absolute("/about"),
+    inLanguage: "th-TH",
+    mainEntity: {
+      "@type": "Person",
+      name: SITE.agent.name,
+      jobTitle: SITE.agent.role,
+      telephone: SITE.phone,
+      email: SITE.email,
+      worksFor: { "@id": `${SITE_URL}/#organization` },
+      knowsAbout: [
+        "การปล่อยเช่าคอนโดในกรุงเทพฯ",
+        "การตั้งราคาค่าเช่า",
+        "การคัดกรองผู้เช่า",
+      ],
+    },
+  };
+
   return (
     <>
-      <Section kicker="About" title={SITE.agent.name}>
+      <JsonLd id="ld-profile" data={profileLd} />
+      <JsonLd
+        id="ld-about-bc"
+        data={breadcrumb([
+          { name: "หน้าหลัก", path: "/" },
+          { name: "เกี่ยวกับฉัน", path: "/about" },
+        ])}
+      />
+      <Section as="h1" kicker="About" title={SITE.agent.name}>
         <p className="th text-[13px] text-muted -mt-6 mb-8">
           ที่ปรึกษาอสังหาริมทรัพย์ · ใบอนุญาต {SITE.agent.license} · กรุงเทพฯ
         </p>

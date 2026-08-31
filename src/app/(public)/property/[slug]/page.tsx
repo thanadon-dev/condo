@@ -18,6 +18,8 @@ import LeadForm from "@/components/LeadForm";
 import { baht } from "@/lib/site";
 import { getSettings } from "@/lib/settings";
 import { decodeSlug } from "@/lib/route";
+import JsonLd from "@/components/JsonLd";
+import { breadcrumb } from "@/lib/jsonld";
 
 export const revalidate = 3600;
 export const dynamicParams = true;
@@ -106,9 +108,14 @@ export default async function PropertyPage({
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      <JsonLd id="ld-prop" data={jsonLd} />
+      <JsonLd
+        id="ld-prop-bc"
+        data={breadcrumb([
+          { name: "หน้าหลัก", path: "/" },
+          { name: "ทรัพย์ทั้งหมด", path: "/properties" },
+          { name: p.title, path: `/property/${p.slug}` },
+        ])}
       />
 
       <div className="mx-auto max-w-[1240px] px-6 pt-10">

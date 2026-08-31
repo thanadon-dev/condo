@@ -9,6 +9,8 @@ import {
   aliasTarget,
 } from "@/lib/queries";
 import { decodeSlug } from "@/lib/route";
+import JsonLd from "@/components/JsonLd";
+import { areaLd, itemList, breadcrumb } from "@/lib/jsonld";
 
 export const revalidate = 3600;
 export const dynamicParams = true;
@@ -54,7 +56,22 @@ export default async function AreaPage({
   const covers = coverMap(items.map((p) => p.id));
 
   return (
+    <>
+      <JsonLd id="ld-area" data={areaLd(a, items.length)} />
+      <JsonLd
+        id="ld-area-list"
+        data={itemList(items, (p) => `/property/${p.slug}`)}
+      />
+      <JsonLd
+        id="ld-area-bc"
+        data={breadcrumb([
+          { name: "หน้าหลัก", path: "/" },
+          { name: "ทรัพย์ทั้งหมด", path: "/properties" },
+          { name: `ทำเล${a.name}`, path: `/area/${a.slug}` },
+        ])}
+      />
     <Section
+      as="h1"
       kicker="Neighbourhood"
       title={`ทำเล${a.name}`}
       sub={`พบ ${items.length} รายการที่ตรงกับทำเลนี้`}
@@ -76,5 +93,6 @@ export default async function AreaPage({
         </p>
       )}
     </Section>
+    </>
   );
 }

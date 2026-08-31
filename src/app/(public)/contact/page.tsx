@@ -3,6 +3,9 @@ import { Section } from "@/components/Section";
 import LeadForm from "@/components/LeadForm";
 import { SITE } from "@/lib/site";
 import { getSettings, telHref } from "@/lib/settings";
+import JsonLd from "@/components/JsonLd";
+import { breadcrumb } from "@/lib/jsonld";
+import { absolute, SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "ติดต่อเช่า",
@@ -12,8 +15,40 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   const SITE = getSettings();
+
+  const contactLd = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    url: absolute("/contact"),
+    inLanguage: "th-TH",
+    mainEntity: {
+      "@id": `${SITE_URL}/#organization`,
+      "@type": "RealEstateAgent",
+      name: SITE.name,
+      telephone: SITE.phone,
+      email: SITE.email,
+      contactPoint: {
+        "@type": "ContactPoint",
+        telephone: SITE.mobile,
+        contactType: "customer service",
+        areaServed: "TH",
+        availableLanguage: ["th", "en"],
+      },
+    },
+  };
+
   return (
+    <>
+      <JsonLd id="ld-contact" data={contactLd} />
+      <JsonLd
+        id="ld-contact-bc"
+        data={breadcrumb([
+          { name: "หน้าหลัก", path: "/" },
+          { name: "ติดต่อเช่า", path: "/contact" },
+        ])}
+      />
     <Section
+      as="h1"
       kicker="Contact"
       title="ติดต่อเช่า"
       sub="ส่งรายละเอียดห้องมาได้ ผมประเมินราคาเช่าที่ปิดได้จริงให้ก่อนตัดสินใจ"
@@ -48,5 +83,6 @@ export default function ContactPage() {
         </aside>
       </div>
     </Section>
+    </>
   );
 }

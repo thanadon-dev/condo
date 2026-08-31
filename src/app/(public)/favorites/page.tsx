@@ -15,6 +15,7 @@ export const metadata: Metadata = {
 export default function FavoritesPage() {
   return (
     <Section
+      as="h1"
       kicker="Saved"
       title="รายการโปรด"
       sub="เก็บไว้ในเครื่องของคุณเท่านั้น ไม่ได้ส่งขึ้นเซิร์ฟเวอร์"

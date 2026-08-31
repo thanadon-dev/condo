@@ -4,7 +4,10 @@ import { Suspense } from "react";
 import { Section } from "@/components/Section";
 import TagFilter from "@/components/TagFilter";
 import { listArticles, articleTags } from "@/lib/queries";
-import { thaiDate } from "@/lib/site";
+import { thaiDate, absolute } from "@/lib/site";
+import { getSettings } from "@/lib/settings";
+import JsonLd from "@/components/JsonLd";
+import { SITE_URL } from "@/lib/site";
 
 export const revalidate = 3600;
 
@@ -39,8 +42,28 @@ async function List({ searchParams }: { searchParams: SP }) {
   const all = listArticles();
   const items = tag ? all.filter((a) => a.tag === tag) : all;
 
+  const SITE = getSettings();
+  const blogLd = {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "@id": `${SITE_URL}/journal#blog`,
+    name: `บทความจาก ${SITE.name}`,
+    url: absolute("/journal"),
+    inLanguage: "th-TH",
+    publisher: { "@id": `${SITE_URL}/#organization` },
+    blogPost: items.map((a) => ({
+      "@type": "BlogPosting",
+      headline: a.title,
+      description: a.lead,
+      datePublished: a.published_on,
+      url: absolute(`/journal/${a.slug}`),
+      author: { "@type": "Person", name: SITE.agent.name },
+    })),
+  };
+
   return (
     <>
+      <JsonLd id="ld-blog" data={blogLd} />
       <TagFilter tags={tags} active={tag} total={all.length} />
 
       <div className="grid gap-6 md:grid-cols-2 mt-8">
@@ -69,6 +92,7 @@ async function List({ searchParams }: { searchParams: SP }) {
 export default function JournalPage({ searchParams }: { searchParams: SP }) {
   return (
     <Section
+      as="h1"
       kicker="Journal"
       title="บทความ"
       sub="บันทึกจากงานจริงเรื่องการตั้งราคา การอ่านทำเล และการดูแลผู้เช่า"
