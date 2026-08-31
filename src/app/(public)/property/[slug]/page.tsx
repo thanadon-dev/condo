@@ -20,6 +20,7 @@ import { getSettings } from "@/lib/settings";
 import { decodeSlug } from "@/lib/route";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumb } from "@/lib/jsonld";
+import CopyLink from "@/components/CopyLink";
 
 export const revalidate = 3600;
 export const dynamicParams = true;
@@ -140,6 +141,9 @@ export default async function PropertyPage({
               {p.title}
             </h1>
             <p className="th mt-2 text-[14px] text-muted">{p.location}</p>
+            <div className="mt-4">
+              <CopyLink path={`/property/${p.slug}`} />
+            </div>
           </div>
           <div className="text-left sm:text-right">
             <div className="kicker">ค่าเช่า / เดือน</div>

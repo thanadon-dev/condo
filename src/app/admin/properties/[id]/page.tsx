@@ -3,6 +3,7 @@ import Link from "next/link";
 import { adminPropertyById } from "@/lib/admin";
 import AdminForm from "@/components/admin/AdminForm";
 import ImageManager from "@/components/admin/ImageManager";
+import CopyLink from "@/components/CopyLink";
 import { saveProperty } from "@/app/actions/admin";
 import { imagesOf } from "@/lib/queries";
 import { PROPERTY_FIELDS } from "../fields";
@@ -30,12 +31,15 @@ export default async function EditProperty({
             {p.code} · /property/{p.slug}
           </p>
         </div>
-        <Link
-          href={`/property/${p.slug}`}
-          className="th text-[12.5px] px-4 py-2.5 border border-line-2 hover:border-ink transition-colors"
-        >
-          ดูหน้าจริง
-        </Link>
+        <div className="flex flex-wrap items-center gap-2">
+          <CopyLink path={`/property/${p.slug}`} />
+          <Link
+            href={`/property/${p.slug}`}
+            className="th text-[12.5px] px-4 py-2.5 border border-line-2 hover:border-ink transition-colors"
+          >
+            ดูหน้าจริง
+          </Link>
+        </div>
       </div>
 
       <AdminForm

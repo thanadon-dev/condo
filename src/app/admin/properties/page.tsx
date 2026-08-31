@@ -3,6 +3,7 @@ import { adminProperties } from "@/lib/admin";
 import { baht } from "@/lib/site";
 import CreatePanel from "@/components/admin/CreatePanel";
 import DeleteButton from "@/components/admin/DeleteButton";
+import CopyLink from "@/components/CopyLink";
 import { saveProperty, deleteProperty } from "@/app/actions/admin";
 import { PROPERTY_FIELDS } from "./fields";
 
@@ -70,6 +71,7 @@ export default function AdminProperties() {
               <Link href={`/admin/properties/${p.id}`} className={actionBtn}>
                 แก้ไข
               </Link>
+              <CopyLink path={`/property/${p.slug}`} label="คัดลอก" compact />
               <DeleteButton action={deleteProperty} id={p.id} />
             </div>
           </div>
@@ -128,6 +130,11 @@ export default function AdminProperties() {
                     >
                       แก้ไข
                     </Link>
+                    <CopyLink
+                      path={`/property/${p.slug}`}
+                      label="คัดลอก"
+                      compact
+                    />
                     <DeleteButton action={deleteProperty} id={p.id} />
                   </div>
                 </td>
