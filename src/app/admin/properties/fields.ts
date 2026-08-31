@@ -34,7 +34,7 @@ export const PROPERTY_FIELDS: Field[] = [
   { key: "baths", label: "ห้องน้ำ", type: "number" },
   { key: "area", label: "พื้นที่ (ตร.ม.)", type: "number" },
   { key: "floor", label: "ชั้น", placeholder: "เช่น ชั้น 24" },
-  { key: "year", label: "ปีที่สร้าง", placeholder: "เช่น 2564" },
+  { key: "building", label: "อาคาร", placeholder: "เช่น อาคาร A" },
   { key: "park", label: "ที่จอดรถ", placeholder: "เช่น 1 คัน" },
   {
     key: "descr",

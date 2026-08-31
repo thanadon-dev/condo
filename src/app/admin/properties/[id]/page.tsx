@@ -53,7 +53,7 @@ export default async function EditProperty({
           baths: p.baths,
           area: p.area,
           floor: p.floor,
-          year: p.year,
+          building: p.building,
           park: p.park,
           descr: p.descr,
           descr2: p.descr2,

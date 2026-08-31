@@ -16,7 +16,7 @@ export type Property = {
   baths: number;
   area: number;
   floor: string;
-  year: string;
+  building: string;
   park: string;
   descr: string;
   descr2: string;

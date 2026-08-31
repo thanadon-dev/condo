@@ -64,7 +64,7 @@ export async function saveProperty(
     baths: num(form.get("baths")),
     area: num(form.get("area")),
     floor: s(form.get("floor"), 40),
-    year: s(form.get("year"), 20),
+    building: s(form.get("building"), 40),
     park: s(form.get("park"), 40),
     descr: s(form.get("descr"), 2000),
     descr2: s(form.get("descr2"), 2000),
@@ -81,7 +81,7 @@ export async function saveProperty(
 
       run(
         `UPDATE properties SET title=?,cat=?,type=?,district=?,location=?,price=?,
-         beds=?,baths=?,area=?,floor=?,year=?,park=?,descr=?,descr2=?,published=?,
+         beds=?,baths=?,area=?,floor=?,building=?,park=?,descr=?,descr2=?,published=?,
          updated_at=datetime('now') WHERE id=?`,
         fields.title,
         fields.cat,
@@ -93,7 +93,7 @@ export async function saveProperty(
         fields.baths,
         fields.area,
         fields.floor,
-        fields.year,
+        fields.building,
         fields.park,
         fields.descr,
         fields.descr2,
@@ -112,7 +112,7 @@ export async function saveProperty(
 
     run(
       `INSERT INTO properties (slug,code,title,cat,type,district,location,price,
-       beds,baths,area,floor,year,park,descr,descr2,amenities,published)
+       beds,baths,area,floor,building,park,descr,descr2,amenities,published)
        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'[]',?)`,
       slug,
       `CD-${maxCode + 1}`,
@@ -126,7 +126,7 @@ export async function saveProperty(
       fields.baths,
       fields.area,
       fields.floor,
-      fields.year,
+      fields.building,
       fields.park,
       fields.descr,
       fields.descr2,

@@ -71,7 +71,7 @@ export default async function PropertyPage({
     { k: "ห้องน้ำ", v: String(p.baths) },
     { k: "พื้นที่ใช้สอย", v: `${p.area} ตร.ม.` },
     { k: "ชั้น", v: p.floor },
-    { k: "ปีที่สร้าง", v: p.year },
+    { k: "อาคาร", v: p.building },
     { k: "ที่จอดรถ", v: p.park },
     { k: "รหัสทรัพย์", v: p.code },
   ].filter((s) => s.v);

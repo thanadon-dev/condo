@@ -57,7 +57,7 @@ if (count("areas") === 0) {
 
 if (count("properties") === 0) {
   const ins = db.prepare(`INSERT INTO properties
-    (slug,code,title,cat,type,district,location,price,beds,baths,area,floor,year,park,descr,descr2,amenities,views)
+    (slug,code,title,cat,type,district,location,price,beds,baths,area,floor,building,park,descr,descr2,amenities,views)
     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`);
   seed.SEED.forEach((p, i) => {
     const code = "CD-" + String(1000 + i + 1);
@@ -74,7 +74,7 @@ if (count("properties") === 0) {
       p.baths,
       p.area,
       p.floor,
-      p.year,
+      p.building ?? "",
       p.park,
       `${p.type}${p.floor ? " " + p.floor : ""} ในทำเล${p.district} พื้นที่ใช้สอย ${p.area} ตร.ม. ${p.beds} ห้องนอน ${p.baths} ห้องน้ำ`,
       `ตรวจสอบข้อมูลจริงกับเจ้าของ ณ วันที่ลงประกาศ ราคาอาจเปลี่ยนแปลงตามการเจรจา`,
