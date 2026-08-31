@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import type { ActionState } from "@/app/actions/admin";
+import PolishButton from "./PolishButton";
 
 const INIT: ActionState = { ok: false, message: "" };
 
@@ -16,6 +17,8 @@ export type Field = {
   placeholder?: string;
   /** คำอธิบายเล็ก ๆ ใต้ label */
   hint?: string;
+  /** true = มีปุ่ม "เรียบเรียงด้วย AI" ใต้ช่อง (ใช้กับ area เท่านั้น) */
+  polish?: boolean;
   /** ช่องตัวเลข: ไม่ใส่ = จำนวนเต็ม · "0.01" = ใส่ทศนิยมได้ (เช่น พื้นที่ 22.70) */
   step?: string;
 };
@@ -73,13 +76,16 @@ export default function AdminForm({
                 ))}
               </select>
             ) : f.area ? (
-              <textarea
-                name={f.key}
-                rows={f.rows ?? 4}
-                defaultValue={String(values[f.key] ?? "")}
-                placeholder={f.placeholder}
-                className={`${input} mt-2 resize-y`}
-              />
+              <>
+                <textarea
+                  name={f.key}
+                  rows={f.rows ?? 4}
+                  defaultValue={String(values[f.key] ?? "")}
+                  placeholder={f.placeholder}
+                  className={`${input} mt-2 resize-y`}
+                />
+                {f.polish && <PolishButton targetName={f.key} />}
+              </>
             ) : (
               <input
                 name={f.key}

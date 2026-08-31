@@ -55,6 +55,7 @@ export const PROPERTY_FIELDS: Field[] = [
     area: true,
     rows: 8,
     full: true,
+    polish: true,
   },
   {
     key: "descr2",
