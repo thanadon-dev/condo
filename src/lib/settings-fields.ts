@@ -6,6 +6,7 @@ export type SettingKey =
   | "phone"
   | "mobile"
   | "line"
+  | "lineUrl"
   | "email"
   | "address"
   | "agentName"
@@ -20,6 +21,7 @@ export const SETTING_KEYS: SettingKey[] = [
   "phone",
   "mobile",
   "line",
+  "lineUrl",
   "email",
   "address",
   "agentName",
@@ -55,6 +57,13 @@ export const FIELDS: {
     group: "ช่องทางติดต่อ",
   },
   { key: "line", label: "LINE ID", group: "ช่องทางติดต่อ" },
+  {
+    key: "lineUrl",
+    label: "ลิงก์เพิ่มเพื่อน LINE",
+    hint: "จากปุ่ม 'สร้างลิงก์' ใน LINE OA เช่น https://lin.ee/xxxx",
+    group: "ช่องทางติดต่อ",
+    full: true,
+  },
   { key: "email", label: "อีเมล", group: "ช่องทางติดต่อ" },
   { key: "address", label: "ที่อยู่", group: "ช่องทางติดต่อ", full: true },
   { key: "agentName", label: "ชื่อผู้ดูแล", group: "ที่ปรึกษา" },

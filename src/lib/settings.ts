@@ -15,6 +15,7 @@ export const DEFAULTS: SiteFlat = {
   phone: SITE.phone,
   mobile: SITE.mobile,
   line: SITE.line,
+  lineUrl: SITE.lineUrl,
   email: SITE.email,
   address: SITE.address,
   agentName: SITE.agent.name,
@@ -43,6 +44,7 @@ export function getSettings(): SiteInfo {
     phone: flat.phone,
     mobile: flat.mobile,
     line: flat.line,
+    lineUrl: flat.lineUrl,
     email: flat.email,
     address: flat.address,
     agent: {
@@ -61,6 +63,7 @@ export function getSettingsFlat(): SiteFlat {
     phone: s.phone,
     mobile: s.mobile,
     line: s.line,
+    lineUrl: s.lineUrl,
     email: s.email,
     address: s.address,
     agentName: s.agent.name,

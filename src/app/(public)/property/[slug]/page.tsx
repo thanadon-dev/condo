@@ -14,7 +14,7 @@ import {
 import Gallery from "@/components/Gallery";
 import LocationSection from "@/components/LocationSection";
 import PropertyCard from "@/components/PropertyCard";
-import LeadForm from "@/components/LeadForm";
+import LineCta from "@/components/LineCta";
 import { baht } from "@/lib/site";
 import { getSettings } from "@/lib/settings";
 import { decodeSlug } from "@/lib/route";
@@ -220,12 +220,32 @@ export default async function PropertyPage({
               {SITE.agent.role} · ใบอนุญาต {SITE.agent.license}
             </div>
 
-            <a
-              href="#lead"
-              className="block text-center th text-[13.5px] mt-7 px-6 py-[14px] bg-ink text-paper hover:opacity-85 transition-opacity"
-            >
-              นัดชมบ้าน
-            </a>
+            {SITE.lineUrl ? (
+              <a
+                href={SITE.lineUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 th text-[13.5px] mt-7 px-6 py-[14px] bg-[#06C755] text-white hover:bg-[#05b34c] transition-colors"
+              >
+                <svg
+                  width="17"
+                  height="17"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path d="M12 2C6.48 2 2 5.69 2 10.23c0 4.07 3.55 7.48 8.35 8.12.32.07.77.22.88.5.1.25.07.65.03.91l-.14.85c-.04.25-.2.98.86.53s5.72-3.37 7.8-5.77C21.4 13.79 22 12.09 22 10.23 22 5.69 17.52 2 12 2z" />
+                </svg>
+                ทักไลน์เพื่อนัดชม
+              </a>
+            ) : (
+              <a
+                href="#lead"
+                className="block text-center th text-[13.5px] mt-7 px-6 py-[14px] bg-ink text-paper hover:opacity-85 transition-opacity"
+              >
+                นัดชมบ้าน
+              </a>
+            )}
             <a
               href={`tel:${SITE.mobile.replace(/\s/g, "")}`}
               className="block text-center th text-[13.5px] mt-3 px-6 py-[14px] border border-line hover:border-ink transition-colors"
@@ -241,17 +261,16 @@ export default async function PropertyPage({
         </div>
 
         <section id="lead" className="border-t border-line-2 pt-14 pb-6 scroll-mt-[90px]">
-          <div className="kicker">Enquiry</div>
+          <div className="kicker">Add LINE</div>
           <h2 className="display text-[32px] th mt-2.5">สนใจทรัพย์นี้</h2>
           <p className="th mt-2 text-[13.5px] text-muted">
-            ฝากเบอร์ไว้ได้เลย ผมติดต่อกลับพร้อมข้อมูลค่าส่วนกลางและเงื่อนไขจริง
+            ทักไลน์มาได้เลย แจ้งรหัส {p.code} เพื่อดูรูปเพิ่มและนัดเวลาเข้าชม
           </p>
-          <div className="max-w-[640px] mt-8">
-            <LeadForm
-              propertyId={p.id}
-              propertyTitle={`${p.title} (${p.code})`}
-              source={`/property/${p.slug}`}
-              defaultKind="นัดชมบ้าน"
+          <div className="max-w-[760px] mt-8">
+            <LineCta
+              kicker={`รหัสทรัพย์ ${p.code}`}
+              title="ทักไลน์เพื่อนัดชม"
+              sub={`สนใจ ${p.title} แอดไลน์แล้วแจ้งรหัส ${p.code} ได้เลย ผมส่งข้อมูลค่าส่วนกลาง เงื่อนไขสัญญา และนัดเวลาเข้าชมให้`}
             />
           </div>
         </section>

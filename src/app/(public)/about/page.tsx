@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { Section } from "@/components/Section";
 import TimelineFilter from "@/components/TimelineFilter";
-import LeadForm from "@/components/LeadForm";
+import LineCta from "@/components/LineCta";
 import { listDeals, dealCats } from "@/lib/queries";
 import { SITE, thaiDate } from "@/lib/site";
 import { getSettings } from "@/lib/settings";
@@ -140,12 +140,16 @@ export default function AboutPage({ searchParams }: { searchParams: SP }) {
       </div>
 
       <Section
-        kicker="Enquiry"
+        kicker="Add LINE"
         title="อยากให้ช่วยดูทรัพย์ของคุณไหม"
         sub="คุยได้ทั้งกรณีปล่อยเช่าใหม่ ผู้เช่าเดิมย้ายออก หรือประกาศไว้แล้วยังไม่มีคนติดต่อ"
       >
-        <div className="max-w-[640px]">
-          <LeadForm source="/about" defaultKind="ประเมินราคา" />
+        <div className="max-w-[760px]">
+          <LineCta
+            kicker="Add LINE"
+            title="ทักไลน์คุยได้เลย"
+            sub="แอดไลน์แล้วเล่ารายละเอียดทรัพย์มาได้ทันที ผมประเมินค่าเช่าที่ปิดได้จริงให้ก่อนตัดสินใจ"
+          />
         </div>
       </Section>
     </>

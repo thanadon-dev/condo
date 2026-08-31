@@ -8,6 +8,8 @@ export type SiteInfo = {
   phone: string;
   mobile: string;
   line: string;
+  /** ลิงก์เพิ่มเพื่อน LINE OA เช่น https://lin.ee/xxxx */
+  lineUrl: string;
   email: string;
   address: string;
   agent: { name: string; role: string; license: string };
@@ -20,6 +22,7 @@ export const SITE: SiteInfo = {
   phone: "081 234 5667",
   mobile: "081 234 5667",
   line: "@condod",
+  lineUrl: "",
   email: "hello@condod.co.th",
   address: "ชั้น 12 อาคารสาทรสแควร์ กรุงเทพฯ 10120",
   agent: {
