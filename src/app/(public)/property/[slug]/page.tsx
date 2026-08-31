@@ -7,7 +7,7 @@ import {
   amenitiesOf,
   imagesOf,
   poisOf,
-  nearbyProperties,
+  suggestedProperties,
   coverMap,
   aliasTarget,
 } from "@/lib/queries";
@@ -63,8 +63,8 @@ export default async function PropertyPage({
   const amenities = amenitiesOf(p);
   const images = imagesOf(p.id);
   const pois = poisOf(p.id);
-  const nearby = nearbyProperties(p);
-  const nearbyCovers = coverMap(nearby.map((n) => n.id));
+  const suggested = suggestedProperties(p);
+  const suggestedCovers = coverMap(suggested.map((n) => n.id));
   const specs = [
     { k: "ประเภท", v: p.type },
     { k: "ห้องนอน", v: String(p.beds) },
@@ -200,6 +200,7 @@ export default async function PropertyPage({
             <LocationSection
               lat={p.lat}
               lng={p.lng}
+              mapUrl={p.map_url}
               title={p.title}
               district={p.district}
               pois={pois}
@@ -251,26 +252,25 @@ export default async function PropertyPage({
           </div>
         </section>
 
-        {nearby.length > 0 && (
+        {suggested.length > 0 && (
           <section className="border-t border-line-2 pt-14 pb-6">
-            <div className="kicker">Nearby</div>
+            <div className="kicker">You may also like</div>
             <h2 className="display text-[32px] th mt-2.5">
-              อสังหาฯ ในพื้นที่ใกล้เคียง
+              รายการที่คุณอาจจะชอบ
             </h2>
             <p className="th mt-2 text-[13.5px] text-muted">
-              รอบ {p.district} ในรัศมี 4 กม.
+              ทำเลและช่วงค่าเช่าใกล้เคียงกับ {p.title}
             </p>
 
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 mt-8">
-              {nearby.map((n) => (
+              {suggested.map((n) => (
                 <div key={n.id} className="relative">
-                  <span className="absolute right-3 top-[calc(75%-2.6rem)] z-20 bg-ink/85 text-paper th text-[11.5px] px-2.5 py-1.5 pointer-events-none">
-                    ห่าง{" "}
-                    {n.distanceKm < 1
-                      ? `${Math.round(n.distanceKm * 1000)} ม.`
-                      : `${n.distanceKm.toFixed(1)} กม.`}
-                  </span>
-                  <PropertyCard p={n} cover={nearbyCovers[n.id]} />
+                  {n.reason && (
+                    <span className="absolute left-0 top-3 z-20 bg-ink/85 text-paper th text-[11.5px] px-2.5 py-1.5 pointer-events-none max-w-[calc(100%-3.5rem)] truncate">
+                      {n.reason}
+                    </span>
+                  )}
+                  <PropertyCard p={n} cover={suggestedCovers[n.id]} />
                 </div>
               ))}
             </div>

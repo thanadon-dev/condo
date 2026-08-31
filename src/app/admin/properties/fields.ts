@@ -43,6 +43,12 @@ export const PROPERTY_FIELDS: Field[] = [
   { key: "building", label: "อาคาร", placeholder: "เช่น อาคาร A" },
   { key: "park", label: "ที่จอดรถ", placeholder: "เช่น 1 คัน" },
   {
+    key: "map_url",
+    label: "ลิงก์ Google Maps",
+    placeholder: "วางลิงก์จากปุ่ม 'แชร์' ใน Google Maps ได้เลย",
+    full: true,
+  },
+  {
     key: "descr",
     label: "รายละเอียด",
     area: true,

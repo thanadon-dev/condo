@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/auth";
 import { run, one } from "@/lib/db";
 import { slugify, uniqueSlug } from "@/lib/slug";
+import { parseCoords, isShortLink, expandShortLink, unwrapIframe } from "@/lib/gmap";
 import { all } from "@/lib/db";
 import { LEAD_STATUSES } from "@/lib/lead-status";
 
@@ -78,6 +79,24 @@ export async function saveProperty(
     published: form.get("published") ? 1 : 0,
   };
 
+  // ลิงก์ Google Maps -> แกะพิกัดเก็บลง lat/lng
+  let mapUrl = unwrapIframe(s(form.get("map_url"), 900));
+  let coords = parseCoords(mapUrl);
+  if (!coords && mapUrl && isShortLink(mapUrl)) {
+    // ลิงก์ย่อไม่มีพิกัดในตัว ต้องคลายก่อน (ยิงเน็ตครั้งเดียวตอนกดบันทึก)
+    const full = await expandShortLink(mapUrl);
+    if (full) {
+      coords = parseCoords(full);
+      if (coords) mapUrl = full;
+    }
+  }
+  if (mapUrl && !coords) {
+    return {
+      ok: false,
+      message: "อ่านพิกัดจากลิงก์นี้ไม่ได้ — ลองใช้ปุ่ม 'แชร์ > คัดลอกลิงก์' ใน Google Maps",
+    };
+  }
+
   try {
     if (id) {
       const prev = one<{ slug: string }>(
@@ -89,6 +108,7 @@ export async function saveProperty(
       run(
         `UPDATE properties SET title=?,cat=?,type=?,district=?,location=?,price=?,
          beds=?,baths=?,area=?,floor=?,building=?,park=?,descr=?,descr2=?,published=?,
+         map_url=?,lat=?,lng=?,
          updated_at=datetime('now') WHERE id=?`,
         fields.title,
         fields.cat,
@@ -105,6 +125,9 @@ export async function saveProperty(
         fields.descr,
         fields.descr2,
         fields.published,
+        mapUrl,
+        coords ? coords.lat : null,
+        coords ? coords.lng : null,
         id,
       );
       refreshPublic([`/property/${prev.slug}`, "/properties"]);
@@ -119,8 +142,9 @@ export async function saveProperty(
 
     run(
       `INSERT INTO properties (slug,code,title,cat,type,district,location,price,
-       beds,baths,area,floor,building,park,descr,descr2,amenities,published)
-       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'[]',?)`,
+       beds,baths,area,floor,building,park,descr,descr2,amenities,published,
+       map_url,lat,lng)
+       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'[]',?,?,?,?)`,
       slug,
       `CD-${maxCode + 1}`,
       fields.title,
@@ -138,6 +162,9 @@ export async function saveProperty(
       fields.descr,
       fields.descr2,
       fields.published,
+      mapUrl,
+      coords ? coords.lat : null,
+      coords ? coords.lng : null,
     );
     refreshPublic(["/properties"]);
     return { ok: true, message: "เพิ่มทรัพย์ใหม่แล้ว" };

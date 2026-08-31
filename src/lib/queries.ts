@@ -11,6 +11,7 @@ export type Property = {
   location: string;
   lat: number | null;
   lng: number | null;
+  map_url: string;
   price: number;
   beds: number;
   baths: number;
@@ -236,6 +237,87 @@ export function nearbyProperties(
     .filter((r) => r.distanceKm <= radiusKm)
     .sort((a, b) => a.distanceKm - b.distanceKm)
     .slice(0, limit);
+}
+
+export type Suggested = Property & {
+  distanceKm: number | null;
+  /** เหตุผลที่แนะนำ เช่น "ทำเลเดียวกัน" — เอาไปโชว์บนการ์ด */
+  reason: string;
+};
+
+/**
+ * "รายการที่คุณอาจจะชอบ" — ให้คะแนนจากหลายด้าน ไม่พึ่งพิกัดอย่างเดียว
+ * เพราะทรัพย์ที่ยังไม่ได้ใส่ลิงก์แผนที่จะไม่มี lat/lng
+ *
+ * คะแนน: ทำเลเดียวกัน 50 · ใกล้กันเชิงพิกัด 0-40 · ราคาใกล้เคียง 0-30
+ *        ประเภทเดียวกัน 12 · หมวดเดียวกัน 8 · ห้องนอนเท่ากัน 6
+ */
+export function suggestedProperties(p: Property, limit = 3): Suggested[] {
+  const rows = all<Property>(
+    "SELECT * FROM properties WHERE published = 1 AND id != ?",
+    p.id,
+  );
+  if (!rows.length) return [];
+
+  const sameDistrict = (a: string, b: string) => {
+    const x = (a || "").trim();
+    const y = (b || "").trim();
+    if (!x || !y) return false;
+    return x === y || x.includes(y) || y.includes(x);
+  };
+
+  const scored = rows.map((r) => {
+    let score = 0;
+    const reasons: string[] = [];
+
+    const distanceKm =
+      p.lat !== null && p.lng !== null && r.lat !== null && r.lng !== null
+        ? haversineKm(p.lat, p.lng, r.lat, r.lng)
+        : null;
+
+    if (distanceKm !== null && distanceKm <= 8) {
+      score += Math.round(40 * (1 - distanceKm / 8));
+      reasons.push(
+        distanceKm < 1
+          ? `ห่าง ${Math.round(distanceKm * 1000)} ม.`
+          : `ห่าง ${distanceKm.toFixed(1)} กม.`,
+      );
+    }
+
+    if (sameDistrict(p.district, r.district)) {
+      score += 50;
+      if (!reasons.length) reasons.push(`ทำเล${r.district}`);
+    }
+
+    // ราคาต่างกันไม่เกิน 40% ถือว่าอยู่ในงบเดียวกัน
+    if (p.price > 0 && r.price > 0) {
+      const diff = Math.abs(r.price - p.price) / p.price;
+      if (diff <= 0.4) {
+        score += Math.round(30 * (1 - diff / 0.4));
+        if (diff <= 0.15) reasons.push("ค่าเช่าใกล้เคียง");
+      }
+    }
+
+    if (p.type === r.type) score += 12;
+    if (p.cat === r.cat) score += 8;
+    if (p.beds === r.beds) {
+      score += 6;
+      if (reasons.length < 2) reasons.push(`${r.beds} ห้องนอน`);
+    }
+
+    return {
+      ...r,
+      distanceKm,
+      score,
+      reason: reasons.slice(0, 2).join(" · "),
+    };
+  });
+
+  return scored
+    .filter((r) => r.score > 0)
+    .sort((a, b) => b.score - a.score || a.price - b.price)
+    .slice(0, limit)
+    .map(({ score, ...rest }) => rest);
 }
 
 export function amenitiesOf(p: Property): string[] {

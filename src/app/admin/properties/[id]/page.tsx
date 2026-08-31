@@ -55,6 +55,7 @@ export default async function EditProperty({
           floor: p.floor,
           building: p.building,
           park: p.park,
+          map_url: p.map_url,
           descr: p.descr,
           descr2: p.descr2,
           published: p.published,
