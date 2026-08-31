@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { SITE } from "@/lib/site";
+import { getSettings } from "@/lib/settings";
 import MobileNav from "./MobileNav";
 
 const NAV = [
@@ -11,6 +11,8 @@ const NAV = [
 ];
 
 export default function SiteHeader() {
+  const SITE = getSettings();
+
   return (
     <header className="sticky top-0 z-40 bg-paper/92 backdrop-blur-[14px] border-b border-line-2">
       <div className="wrap h-[68px] sm:h-[82px] flex items-center justify-between gap-6 lg:gap-10">
@@ -58,7 +60,7 @@ export default function SiteHeader() {
             ติดต่อเช่า
           </Link>
 
-          <MobileNav items={NAV} />
+          <MobileNav items={NAV} mobile={SITE.mobile} />
         </div>
       </div>
     </header>

@@ -4,12 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { SITE } from "@/lib/site";
 
 export default function MobileNav({
   items,
+  mobile,
 }: {
   items: { href: string; label: string }[];
+  mobile: string;
 }) {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -91,10 +92,10 @@ export default function MobileNav({
                 ติดต่อเช่า
               </Link>
               <a
-                href={`tel:${SITE.mobile.replace(/\s/g, "")}`}
+                href={`tel:${mobile.replace(/[\s-]/g, "")}`}
                 className="th text-center text-[14px] px-6 py-4 border border-line"
               >
-                โทร {SITE.mobile}
+                โทร {mobile}
               </a>
             </div>
           </nav>

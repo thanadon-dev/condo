@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Section } from "@/components/Section";
 import LeadForm from "@/components/LeadForm";
 import { SITE } from "@/lib/site";
+import { getSettings, telHref } from "@/lib/settings";
 
 export const metadata: Metadata = {
   title: "ติดต่อเช่า",
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
+  const SITE = getSettings();
   return (
     <Section
       kicker="Contact"

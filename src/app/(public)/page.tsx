@@ -9,11 +9,13 @@ import {
   siteStats,
   coverMap,
 } from "@/lib/queries";
-import { SITE, SITE_URL } from "@/lib/site";
+import { SITE_URL } from "@/lib/site";
+import { getSettings } from "@/lib/settings";
 
 export const revalidate = 3600;
 
 export default function Home() {
+  const SITE = getSettings();
   const items = listProperties();
   const areas = areasWithCount();
   const articles = listArticles().slice(0, 2);

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SITE } from "@/lib/site";
+import { getSettings } from "@/lib/settings";
 
 const COLS = [
   {
@@ -22,6 +22,7 @@ const COLS = [
 ];
 
 export default function SiteFooter() {
+  const SITE = getSettings();
   const year = new Date().getFullYear() + 543;
   return (
     <footer className="border-t border-line-2 bg-sand/60 mt-24">

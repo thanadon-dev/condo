@@ -73,7 +73,5 @@ CREATE TABLE IF NOT EXISTS articles (
 );
 CREATE INDEX IF NOT EXISTS idx_art_date ON articles(published_on DESC);
 
-CREATE TABLE IF NOT EXISTS settings (
-  key TEXT PRIMARY KEY,
-  value TEXT NOT NULL
-);
+-- ตาราง settings ย้ายไป schema-006-settings.sql (มี updated_at ด้วย)
+-- ห้ามประกาศซ้ำที่นี่: CREATE TABLE IF NOT EXISTS จะข้ามตัวใหม่ทั้งก้อน

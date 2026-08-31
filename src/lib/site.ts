@@ -2,11 +2,23 @@ export const SITE_URL = (
   process.env.SITE_URL || "https://condo.thanadon.com"
 ).replace(/\/+$/, "");
 
-export const SITE = {
+export type SiteInfo = {
+  name: string;
+  tagline: string;
+  phone: string;
+  mobile: string;
+  line: string;
+  email: string;
+  address: string;
+  agent: { name: string; role: string; license: string };
+};
+
+/** ค่าเริ่มต้น (demo) — ค่าจริงตั้งได้ที่ /admin/settings แล้วเก็บลงตาราง settings */
+export const SITE: SiteInfo = {
   name: "Condo D Property",
   tagline: "ที่ปรึกษาอสังหาริมทรัพย์ในกรุงเทพฯ และปริมณฑล ตั้งแต่ปี 2555",
-  phone: "02 118 4590",
-  mobile: "089 442 1180",
+  phone: "081 234 5667",
+  mobile: "081 234 5667",
   line: "@condod",
   email: "hello@condod.co.th",
   address: "ชั้น 12 อาคารสาทรสแควร์ กรุงเทพฯ 10120",

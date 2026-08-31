@@ -6,6 +6,7 @@ import TimelineFilter from "@/components/TimelineFilter";
 import LeadForm from "@/components/LeadForm";
 import { listDeals, dealCats } from "@/lib/queries";
 import { SITE, thaiDate } from "@/lib/site";
+import { getSettings } from "@/lib/settings";
 
 export const revalidate = 3600;
 
@@ -60,6 +61,7 @@ async function Timeline({ searchParams }: { searchParams: SP }) {
 }
 
 export default function AboutPage({ searchParams }: { searchParams: SP }) {
+  const SITE = getSettings();
   const deals = listDeals();
   const rent = deals.filter((d) => d.cat !== "ขายขาด").length;
 

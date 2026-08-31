@@ -14,7 +14,8 @@ import Gallery from "@/components/Gallery";
 import LocationSection from "@/components/LocationSection";
 import PropertyCard from "@/components/PropertyCard";
 import LeadForm from "@/components/LeadForm";
-import { baht, SITE } from "@/lib/site";
+import { baht } from "@/lib/site";
+import { getSettings } from "@/lib/settings";
 import { decodeSlug } from "@/lib/route";
 
 export const revalidate = 3600;
@@ -50,6 +51,7 @@ export default async function PropertyPage({
   const p = propertyBySlug(decodeSlug(slug));
   if (!p) notFound();
 
+  const SITE = getSettings();
   const amenities = amenitiesOf(p);
   const images = imagesOf(p.id);
   const pois = poisOf(p.id);
