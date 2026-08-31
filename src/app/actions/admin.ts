@@ -20,6 +20,13 @@ const num = (v: FormDataEntryValue | null, def = 0) => {
   return Number.isFinite(n) && n >= 0 && n <= 10_000_000 ? Math.floor(n) : def;
 };
 
+/** ตัวเลขที่มีทศนิยมได้ เช่น พื้นที่ 22.70 ตร.ม. (num() ปัดเศษทิ้ง ใช้กับช่องนี้ไม่ได้) */
+const dec = (v: FormDataEntryValue | null, def = 0) => {
+  const n = Number(String(v ?? "").trim());
+  if (!Number.isFinite(n) || n < 0 || n > 10_000_000) return def;
+  return Math.round(n * 100) / 100;
+};
+
 async function guard(): Promise<boolean> {
   return requireAdmin();
 }
@@ -62,7 +69,7 @@ export async function saveProperty(
     price: num(form.get("price")),
     beds: num(form.get("beds")),
     baths: num(form.get("baths")),
-    area: num(form.get("area")),
+    area: dec(form.get("area")),
     floor: s(form.get("floor"), 40),
     building: s(form.get("building"), 40),
     park: s(form.get("park"), 40),

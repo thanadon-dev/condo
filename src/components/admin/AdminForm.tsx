@@ -14,6 +14,8 @@ export type Field = {
   select?: readonly string[];
   full?: boolean;
   placeholder?: string;
+  /** ช่องตัวเลข: ไม่ใส่ = จำนวนเต็ม · "0.01" = ใส่ทศนิยมได้ (เช่น พื้นที่ 22.70) */
+  step?: string;
 };
 
 export default function AdminForm({
@@ -77,6 +79,14 @@ export default function AdminForm({
                 type={f.type ?? "text"}
                 defaultValue={String(values[f.key] ?? "")}
                 placeholder={f.placeholder}
+                {...(f.type === "number"
+                  ? {
+                      step: f.step ?? "1",
+                      min: 0,
+                      // decimal = คีย์บอร์ดมือถือมีปุ่มจุด (numeric ไม่มี)
+                      inputMode: f.step ? ("decimal" as const) : ("numeric" as const),
+                    }
+                  : {})}
                 className={`${input} mt-2`}
               />
             )}
