@@ -65,7 +65,18 @@ export default function SiteFooter() {
           <span>
             © {year} {SITE.name} Co., Ltd.
           </span>
-          <span>นโยบายความเป็นส่วนตัว · เงื่อนไขการใช้งาน</span>
+          <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+            <a
+              href="https://thanadon.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-ink-2 transition-colors"
+            >
+              Develop By Thanadon-dev
+            </a>
+            <span aria-hidden="true">·</span>
+            <span>นโยบายความเป็นส่วนตัว · เงื่อนไขการใช้งาน</span>
+          </span>
         </div>
       </div>
     </footer>
