@@ -111,19 +111,19 @@ export default async function PropertyPage({
           <span className="text-ink-2">{p.title}</span>
         </nav>
 
-        <header className="mt-8 flex flex-wrap items-end justify-between gap-6 pb-10 border-b border-line-2">
+        <header className="mt-6 sm:mt-8 flex flex-wrap items-end justify-between gap-5 sm:gap-6 pb-8 sm:pb-10 border-b border-line-2">
           <div>
             <div className="kicker">
               {p.type} · {p.code}
             </div>
-            <h1 className="display th text-[40px] md:text-[52px] mt-3 leading-tight">
+            <h1 className="display th text-[30px] sm:text-[40px] lg:text-[52px] mt-2.5 sm:mt-3 leading-tight">
               {p.title}
             </h1>
             <p className="th mt-2 text-[14px] text-muted">{p.location}</p>
           </div>
-          <div className="text-right">
+          <div className="text-left sm:text-right">
             <div className="kicker">ราคา</div>
-            <div className="th text-[34px] mt-1 font-light tracking-tight">
+            <div className="th text-[27px] sm:text-[34px] mt-1 font-light tracking-tight">
               {baht(p.price)}
             </div>
             <div className="th text-[12.5px] text-muted mt-1">
@@ -132,13 +132,13 @@ export default async function PropertyPage({
           </div>
         </header>
 
-        <div className="mt-10">
+        <div className="mt-8 sm:mt-10">
           <Gallery images={images} />
         </div>
 
-        <div className="grid gap-14 lg:grid-cols-[1fr_340px] mt-14 pb-10">
+        <div className="grid gap-10 lg:gap-14 lg:grid-cols-[1fr_340px] mt-10 sm:mt-14 pb-10">
           <div>
-            <h2 className="display text-[30px] th">รายละเอียดทรัพย์</h2>
+            <h2 className="display text-[25px] sm:text-[30px] th">รายละเอียดทรัพย์</h2>
             <p className="th mt-4 text-[14.5px] leading-[1.9] text-ink-2">
               {p.descr}
             </p>
@@ -146,7 +146,7 @@ export default async function PropertyPage({
               {p.descr2}
             </p>
 
-            <h2 className="display text-[30px] th mt-14">ข้อมูลสำคัญ</h2>
+            <h2 className="display text-[25px] sm:text-[30px] th mt-10 sm:mt-14">ข้อมูลสำคัญ</h2>
             <dl className="mt-5 grid gap-x-10 sm:grid-cols-2">
               {specs.map((s) => (
                 <div
@@ -186,7 +186,7 @@ export default async function PropertyPage({
             />
           </div>
 
-          <aside className="lg:sticky lg:top-[100px] h-fit border border-line-2 p-7">
+          <aside className="lg:sticky lg:top-[100px] h-fit border border-line-2 p-6 sm:p-7">
             <div className="kicker">ที่ปรึกษาประจำทรัพย์</div>
             <div className="th mt-3 text-[17px] font-medium">
               {SITE.agent.name}

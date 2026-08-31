@@ -43,7 +43,7 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <section className="relative h-[660px] overflow-hidden bg-sand">
+      <section className="relative h-[440px] sm:h-[540px] lg:h-[660px] overflow-hidden bg-sand">
         <Image
           src="/media/hero-mock.webp"
           alt="สระว่ายน้ำดาดฟ้าคอนโดริมแม่น้ำเจ้าพระยา มองเห็นสกายไลน์กรุงเทพฯ"
@@ -59,21 +59,21 @@ export default function Home() {
               "linear-gradient(180deg,rgba(14,14,14,.34) 0%,rgba(14,14,14,.12) 45%,rgba(14,14,14,.52) 100%)",
           }}
         />
-        <div className="relative h-full wrap pb-16 flex flex-col justify-end">
-          <span className="text-[10px] tracking-[0.44em] text-paper/85 mb-[22px]">
+        <div className="relative h-full wrap pb-10 sm:pb-16 flex flex-col justify-end">
+          <span className="text-[9px] sm:text-[10px] tracking-[0.36em] sm:tracking-[0.44em] text-paper/85 mb-4 sm:mb-[22px]">
             BANGKOK · REAL ESTATE
           </span>
-          <h1 className="display text-paper text-[42px] md:text-[66px] leading-[1.08] max-w-[820px] m-0">
+          <h1 className="display text-paper text-[34px] sm:text-[46px] lg:text-[66px] leading-[1.1] lg:leading-[1.08] max-w-[820px] m-0">
             บ้านที่ใช่ ไม่ควรหายาก
           </h1>
-          <p className="th mt-5 max-w-[520px] text-[15.5px] leading-[1.8] font-light text-paper/80">
+          <p className="th mt-4 sm:mt-5 max-w-[520px] text-[13.5px] sm:text-[15.5px] leading-[1.75] sm:leading-[1.8] font-light text-paper/80">
             คัดสรรคอนโด บ้านเดี่ยว และทาวน์โฮมในกรุงเทพฯ พร้อมข้อมูลครบทุกด้าน
             ทั้งพื้นที่ใช้สอย ค่าส่วนกลาง และทำเลรอบโครงการ
           </p>
         </div>
       </section>
 
-      <section className="wrap relative z-10 -mt-14">
+      <section className="wrap relative z-10 -mt-8 lg:-mt-14">
         <HeroSearch areas={areas.map((a) => a.query || a.name)} />
       </section>
 
