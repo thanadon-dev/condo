@@ -33,6 +33,10 @@ export type PropertyImage = {
   url: string;
   alt: string;
   sort: number;
+  /** ธัมบ์เนล 640px (ว่าง = รูปเก่าที่ยังไม่ได้ผ่านระบบอัปโหลด ให้ fallback ไป url) */
+  thumb_url: string;
+  width: number;
+  height: number;
 };
 
 export type Poi = {

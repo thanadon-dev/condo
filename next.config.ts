@@ -17,6 +17,10 @@ const nextConfig: NextConfig = {
 
   experimental: {
     optimizePackageImports: ["leaflet"],
+    serverActions: {
+      // ดีฟอลต์ 1MB — อัปโหลดหลายรูปพร้อมกันจะพัง (client ย่อมาแล้วแต่ยังรวมกันเกินได้)
+      bodySizeLimit: "48mb",
+    },
   },
 
   async headers() {

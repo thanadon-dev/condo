@@ -42,7 +42,10 @@ CREATE TABLE IF NOT EXISTS property_images (
   property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
   url TEXT NOT NULL,
   alt TEXT NOT NULL DEFAULT '',
-  sort INTEGER NOT NULL DEFAULT 0
+  sort INTEGER NOT NULL DEFAULT 0,
+  thumb_url TEXT NOT NULL DEFAULT '',
+  width INTEGER NOT NULL DEFAULT 0,
+  height INTEGER NOT NULL DEFAULT 0
 );
 CREATE INDEX IF NOT EXISTS idx_img_prop ON property_images(property_id, sort);
 

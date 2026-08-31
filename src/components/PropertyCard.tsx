@@ -19,7 +19,7 @@ export default function PropertyCard({
         <Link href={`/property/${p.slug}`} className="block absolute inset-0">
           {cover ? (
             <Image
-              src={cover.url}
+              src={cover.thumb_url || cover.url}
               alt={cover.alt}
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"

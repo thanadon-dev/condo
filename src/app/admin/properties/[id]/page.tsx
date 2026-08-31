@@ -2,7 +2,9 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { adminPropertyById } from "@/lib/admin";
 import AdminForm from "@/components/admin/AdminForm";
+import ImageManager from "@/components/admin/ImageManager";
 import { saveProperty } from "@/app/actions/admin";
+import { imagesOf } from "@/lib/queries";
 import { PROPERTY_FIELDS } from "../fields";
 
 export const dynamic = "force-dynamic";
@@ -57,6 +59,18 @@ export default async function EditProperty({
           descr2: p.descr2,
           published: p.published,
         }}
+      />
+
+      <ImageManager
+        propertyId={p.id}
+        images={imagesOf(p.id).map((img) => ({
+          id: img.id,
+          url: img.url,
+          thumb_url: img.thumb_url,
+          alt: img.alt,
+          width: img.width,
+          height: img.height,
+        }))}
       />
     </>
   );

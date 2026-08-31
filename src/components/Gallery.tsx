@@ -60,7 +60,7 @@ export default function Gallery({ images }: { images: PropertyImage[] }) {
                 className="group relative aspect-[4/3] sm:aspect-auto sm:h-full bg-sand overflow-hidden"
               >
                 <Image
-                  src={img.url}
+                  src={img.thumb_url || img.url}
                   alt={img.alt}
                   fill
                   sizes="(max-width: 640px) 50vw, 33vw"
@@ -85,10 +85,10 @@ export default function Gallery({ images }: { images: PropertyImage[] }) {
                   className="group relative aspect-square bg-sand overflow-hidden"
                 >
                   <Image
-                    src={img.url}
+                    src={img.thumb_url || img.url}
                     alt={img.alt}
                     fill
-                    sizes="20vw"
+                    sizes="(max-width: 640px) 20vw, 160px"
                     className={`object-cover transition-transform duration-[600ms] group-hover:scale-[1.06] ${
                       last ? "brightness-[0.45]" : ""
                     }`}
