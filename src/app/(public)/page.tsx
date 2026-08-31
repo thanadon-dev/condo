@@ -8,6 +8,7 @@ import {
   listArticles,
   siteStats,
   coverMap,
+  propertyFacets,
 } from "@/lib/queries";
 import { SITE_URL } from "@/lib/site";
 import { getSettings } from "@/lib/settings";
@@ -22,6 +23,7 @@ export default function Home() {
   const stats = siteStats();
   const featured = items.slice(0, 6);
   const covers = coverMap(featured.map((p) => p.id));
+  const facets = propertyFacets();
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -76,7 +78,11 @@ export default function Home() {
       </section>
 
       <section className="wrap relative z-10 -mt-8 lg:-mt-14">
-        <HeroSearch areas={areas.map((a) => a.query || a.name)} />
+        <HeroSearch
+          areas={areas.map((a) => a.query || a.name)}
+          priceMin={facets.priceMin}
+          priceMax={facets.priceMax}
+        />
       </section>
 
       <section className="wrap pt-20">

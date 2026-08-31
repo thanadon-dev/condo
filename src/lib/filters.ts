@@ -2,8 +2,8 @@ import type { Filters, Sort } from "./queries";
 
 export const SORTS: { value: Sort; label: string }[] = [
   { value: "new", label: "ล่าสุด" },
-  { value: "price-asc", label: "ราคาน้อย → มาก" },
-  { value: "price-desc", label: "ราคามาก → น้อย" },
+  { value: "price-asc", label: "ค่าเช่าน้อย → มาก" },
+  { value: "price-desc", label: "ค่าเช่ามาก → น้อย" },
   { value: "area-desc", label: "พื้นที่มากสุด" },
 ];
 
@@ -20,7 +20,7 @@ function num(v: string | string[] | undefined): number | null {
   const s = str(v);
   if (!s) return null;
   const n = Number(s);
-  if (!Number.isFinite(n) || n < 0 || n > 1_000_000_000) return null;
+  if (!Number.isFinite(n) || n < 0 || n > 10_000_000) return null;
   return Math.floor(n);
 }
 

@@ -143,7 +143,7 @@ export default function FilterBar({
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
-          <span className="kicker w-[76px]">ช่วงราคา</span>
+          <span className="kicker w-[76px]">ค่าเช่า</span>
           <input
             type="number"
             inputMode="numeric"
@@ -151,7 +151,7 @@ export default function FilterBar({
             key={"min" + min}
             onBlur={(e) => apply({ min: e.target.value || null })}
             placeholder={String(priceMin)}
-            aria-label="ราคาต่ำสุด"
+            aria-label="ค่าเช่าต่ำสุด (บาท/เดือน)"
             className="th w-[150px] text-[13px] px-3.5 py-2.5 border border-line-2 focus:border-ink outline-none"
           />
           <span className="text-muted">—</span>
@@ -162,9 +162,10 @@ export default function FilterBar({
             key={"max" + max}
             onBlur={(e) => apply({ max: e.target.value || null })}
             placeholder={String(priceMax)}
-            aria-label="ราคาสูงสุด"
+            aria-label="ค่าเช่าสูงสุด (บาท/เดือน)"
             className="th w-[150px] text-[13px] px-3.5 py-2.5 border border-line-2 focus:border-ink outline-none"
           />
+          <span className="th text-[12px] text-muted">บาท / เดือน</span>
         </div>
       </div>
 

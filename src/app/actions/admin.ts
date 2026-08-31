@@ -17,7 +17,7 @@ const s = (v: FormDataEntryValue | null, max: number) =>
 
 const num = (v: FormDataEntryValue | null, def = 0) => {
   const n = Number(String(v ?? "").trim());
-  return Number.isFinite(n) && n >= 0 && n <= 1_000_000_000 ? Math.floor(n) : def;
+  return Number.isFinite(n) && n >= 0 && n <= 10_000_000 ? Math.floor(n) : def;
 };
 
 async function guard(): Promise<boolean> {

@@ -18,7 +18,12 @@ export const PROPERTY_FIELDS: Field[] = [
   { key: "cat", label: "หมวดหมู่", select: CATS },
   { key: "type", label: "ประเภท", select: TYPES },
   { key: "district", label: "ทำเล", placeholder: "เช่น สาทร" },
-  { key: "price", label: "ราคา (บาท)", type: "number", placeholder: "12500000" },
+  {
+    key: "price",
+    label: "ค่าเช่า (บาท/เดือน)",
+    type: "number",
+    placeholder: "28000",
+  },
   {
     key: "location",
     label: "ที่ตั้งแบบเต็ม",

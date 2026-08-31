@@ -162,7 +162,7 @@ export default async function Image({
               fontSize: 32,
             }}
           >
-            <span>{baht(p.price)}</span>
+            <span>{`${baht(p.price)} / เดือน`}</span>
             <span style={{ opacity: 0.75 }}>
               {`${p.beds} นอน · ${p.baths} น้ำ · ${p.area} ตร.ม.`}
             </span>

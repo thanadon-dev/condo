@@ -32,7 +32,7 @@ export default function AdminProperties() {
         <table className="w-full th text-[13px]">
           <thead className="bg-sand/60">
             <tr>
-              {["ทรัพย์", "หมวด", "ทำเล", "ราคา", "พื้นที่", "สถานะ", "จัดการ"].map(
+              {["ทรัพย์", "หมวด", "ทำเล", "ค่าเช่า/เดือน", "พื้นที่", "สถานะ", "จัดการ"].map(
                 (h) => (
                   <th
                     key={h}

@@ -35,6 +35,7 @@ export default function PropertyCard({
 
         <div className="absolute left-0 bottom-0 px-[18px] py-[11px] bg-paper text-[14.5px] tracking-[0.01em] whitespace-nowrap pointer-events-none th">
           {baht(p.price)}
+          <span className="text-[11.5px] text-muted"> / เดือน</span>
         </div>
 
         <FavButton id={p.id} className="absolute right-3 top-3 z-10" />

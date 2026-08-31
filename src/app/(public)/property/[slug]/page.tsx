@@ -36,7 +36,7 @@ export async function generateMetadata({
   const title = `${p.title} — ${p.type} ${p.beds} ห้องนอน ${p.area} ตร.ม. ${p.district}`;
   return {
     title,
-    description: `${p.title} ${p.location} ราคา ${baht(p.price)} ${p.beds} ห้องนอน ${p.baths} ห้องน้ำ พื้นที่ ${p.area} ตร.ม.`,
+    description: `${p.title} ${p.location} ค่าเช่า ${baht(p.price)} บาท/เดือน ${p.beds} ห้องนอน ${p.baths} ห้องน้ำ พื้นที่ ${p.area} ตร.ม.`,
     alternates: { canonical: `/property/${p.slug}` },
     openGraph: { title, url: `/property/${p.slug}`, type: "article" },
   };
@@ -87,9 +87,14 @@ export default async function PropertyPage({
     floorSize: { "@type": "QuantitativeValue", value: p.area, unitCode: "MTK" },
     offers: {
       "@type": "Offer",
-      price: p.price,
-      priceCurrency: "THB",
       availability: "https://schema.org/InStock",
+      priceSpecification: {
+        "@type": "UnitPriceSpecification",
+        price: p.price,
+        priceCurrency: "THB",
+        unitCode: "MON",
+        unitText: "เดือน",
+      },
     },
   };
 
@@ -124,12 +129,12 @@ export default async function PropertyPage({
             <p className="th mt-2 text-[14px] text-muted">{p.location}</p>
           </div>
           <div className="text-left sm:text-right">
-            <div className="kicker">ราคา</div>
+            <div className="kicker">ค่าเช่า / เดือน</div>
             <div className="th text-[27px] sm:text-[34px] mt-1 font-light tracking-tight">
               {baht(p.price)}
             </div>
             <div className="th text-[12.5px] text-muted mt-1">
-              {baht(Math.round(p.price / (p.area || 1)))} / ตร.ม.
+              {baht(Math.round(p.price / (p.area || 1)))} / ตร.ม. / เดือน
             </div>
           </div>
         </header>
