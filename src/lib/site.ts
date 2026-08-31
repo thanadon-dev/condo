@@ -13,6 +13,8 @@ export type SiteInfo = {
   email: string;
   address: string;
   agent: { name: string; role: string; license: string };
+  /** Google Analytics 4 measurement ID (G-XXXXXXXXXX) — ว่าง = ปิด */
+  gaId: string;
 };
 
 /** ค่าเริ่มต้น (demo) — ค่าจริงตั้งได้ที่ /admin/settings แล้วเก็บลงตาราง settings */
@@ -30,6 +32,7 @@ export const SITE: SiteInfo = {
     role: "Senior Consultant",
     license: "0341",
   },
+  gaId: "",
 };
 
 export function absolute(pathname: string): string {

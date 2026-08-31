@@ -11,7 +11,8 @@ export type SettingKey =
   | "address"
   | "agentName"
   | "agentRole"
-  | "agentLicense";
+  | "agentLicense"
+  | "gaId";
 
 export type SiteFlat = Record<SettingKey, string>;
 
@@ -27,6 +28,7 @@ export const SETTING_KEYS: SettingKey[] = [
   "agentName",
   "agentRole",
   "agentLicense",
+  "gaId",
 ];
 
 export const FIELDS: {
@@ -69,9 +71,16 @@ export const FIELDS: {
   { key: "agentName", label: "ชื่อผู้ดูแล", group: "ที่ปรึกษา" },
   { key: "agentRole", label: "ตำแหน่ง", group: "ที่ปรึกษา" },
   { key: "agentLicense", label: "เลขใบอนุญาต", group: "ที่ปรึกษา" },
+  {
+    key: "gaId",
+    label: "Google Analytics ID",
+    hint: "รหัสขึ้นต้นด้วย G- เช่น G-XXXXXXXXXX · เว้นว่าง = ปิดการเก็บสถิติ",
+    group: "สถิติผู้เข้าชม",
+    full: true,
+  },
 ];
 
-export const GROUPS = ["ข้อมูลเว็บ", "ช่องทางติดต่อ", "ที่ปรึกษา"];
+export const GROUPS = ["ข้อมูลเว็บ", "ช่องทางติดต่อ", "ที่ปรึกษา", "สถิติผู้เข้าชม"];
 
 export function isSettingKey(k: string): k is SettingKey {
   return (SETTING_KEYS as string[]).includes(k);

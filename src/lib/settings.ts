@@ -21,6 +21,7 @@ export const DEFAULTS: SiteFlat = {
   agentName: SITE.agent.name,
   agentRole: SITE.agent.role,
   agentLicense: SITE.agent.license,
+  gaId: SITE.gaId,
 };
 
 /** อ่านค่าจริงจาก DB ทับค่า default — ค่าว่างถือว่าไม่ตั้ง ใช้ default แทน */
@@ -52,6 +53,7 @@ export function getSettings(): SiteInfo {
       role: flat.agentRole,
       license: flat.agentLicense,
     },
+    gaId: flat.gaId,
   };
 }
 
@@ -69,6 +71,7 @@ export function getSettingsFlat(): SiteFlat {
     agentName: s.agent.name,
     agentRole: s.agent.role,
     agentLicense: s.agent.license,
+    gaId: s.gaId,
   };
 }
 

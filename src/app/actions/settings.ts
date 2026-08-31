@@ -36,6 +36,20 @@ export async function saveSiteSettings(
       return { ok: false, message: "เบอร์โทรใส่ได้เฉพาะตัวเลข เว้นวรรค + และ -" };
   }
 
+  if (values.gaId) {
+    // เผลอวางทั้งโค้ด <script> มา -> ดึงเฉพาะรหัสให้
+    const found = values.gaId.match(/G-[A-Z0-9]{4,20}/i);
+    if (found) values.gaId = found[0].toUpperCase();
+    else
+      return {
+        ok: false,
+        message: "รหัส Google Analytics ต้องขึ้นต้นด้วย G- เช่น G-XXXXXXXXXX",
+      };
+  }
+
+  if (values.lineUrl && !/^https:\/\/\S+$/.test(values.lineUrl))
+    return { ok: false, message: "ลิงก์ LINE ต้องขึ้นต้นด้วย https://" };
+
   try {
     saveSettings(values);
   } catch {
