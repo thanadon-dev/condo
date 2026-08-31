@@ -14,6 +14,8 @@ export type Field = {
   select?: readonly string[];
   full?: boolean;
   placeholder?: string;
+  /** คำอธิบายเล็ก ๆ ใต้ label */
+  hint?: string;
   /** ช่องตัวเลข: ไม่ใส่ = จำนวนเต็ม · "0.01" = ใส่ทศนิยมได้ (เช่น พื้นที่ 22.70) */
   step?: string;
 };
@@ -53,6 +55,11 @@ export default function AdminForm({
             className={`block ${f.full ? "sm:col-span-2" : ""}`}
           >
             <span className="kicker">{f.label}</span>
+            {f.hint && (
+              <span className="th block text-[11.5px] text-muted mt-1">
+                {f.hint}
+              </span>
+            )}
             {f.select ? (
               <select
                 name={f.key}

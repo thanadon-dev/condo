@@ -163,12 +163,17 @@ export default async function PropertyPage({
         <div className="grid gap-10 lg:gap-14 lg:grid-cols-[1fr_340px] mt-10 sm:mt-14 pb-10">
           <div>
             <h2 className="display text-[25px] sm:text-[30px] th">รายละเอียดทรัพย์</h2>
-            <p className="th mt-4 text-[14.5px] leading-[1.9] text-ink-2">
-              {p.descr}
-            </p>
-            <p className="th mt-4 text-[14.5px] leading-[1.9] text-ink-2">
-              {p.descr2}
-            </p>
+            {/* whitespace-pre-line = แสดงการขึ้นบรรทัดที่แอดมินพิมพ์ไว้จริง */}
+            {p.descr && (
+              <p className="th mt-4 text-[14.5px] leading-[1.9] text-ink-2 whitespace-pre-line">
+                {p.descr}
+              </p>
+            )}
+            {p.descr2 && (
+              <p className="th mt-4 text-[14.5px] leading-[1.9] text-ink-2 whitespace-pre-line">
+                {p.descr2}
+              </p>
+            )}
 
             <h2 className="display text-[25px] sm:text-[30px] th mt-10 sm:mt-14">ข้อมูลสำคัญ</h2>
             <dl className="mt-5 grid gap-x-10 sm:grid-cols-2">

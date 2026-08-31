@@ -103,7 +103,10 @@ export default async function DealPage({
 
         <div className="mt-10 space-y-6">
           {d.body.split(/\n{2,}/).filter(Boolean).map((t, i) => (
-            <p key={i} className="th text-[15px] leading-[2] text-ink-2">
+            <p
+              key={i}
+              className="th text-[15px] leading-[2] text-ink-2 whitespace-pre-line"
+            >
               {t}
             </p>
           ))}

@@ -51,15 +51,16 @@ export const PROPERTY_FIELDS: Field[] = [
   {
     key: "descr",
     label: "รายละเอียด",
+    hint: "กด Enter ขึ้นบรรทัดใหม่ได้ หน้าเว็บจะแสดงตามที่พิมพ์",
     area: true,
-    rows: 3,
+    rows: 8,
     full: true,
   },
   {
     key: "descr2",
     label: "รายละเอียดเพิ่มเติม",
     area: true,
-    rows: 3,
+    rows: 6,
     full: true,
   },
 ];
