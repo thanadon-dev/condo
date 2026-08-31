@@ -11,6 +11,9 @@ export const dynamic = "force-dynamic";
 export default function AdminDeals() {
   const items = adminDeals();
 
+  const actionBtn =
+    "th text-[12px] px-3 py-1.5 border border-line-2 hover:border-ink transition-colors";
+
   return (
     <>
       <div className="flex flex-wrap items-end justify-between gap-4 mb-8">
@@ -28,20 +31,54 @@ export default function AdminDeals() {
         />
       </div>
 
-      <div className="border border-line-2 overflow-x-auto">
+      <div className="grid gap-3 md:hidden">
+        {items.map((d) => (
+          <div key={d.id} className="border border-line-2 p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="th text-[14.5px] font-medium leading-snug min-w-0">
+                {d.title}
+              </div>
+              <span className="th text-[11px] px-2 py-1 border border-line-2 shrink-0 text-muted">
+                {d.published ? "เผยแพร่" : "ซ่อน"}
+              </span>
+            </div>
+            <div className="th text-[12px] text-muted mt-2">
+              {d.cat} · {d.location} · {thaiDate(d.closed_on)}
+            </div>
+            <div className="th text-[13px] mt-1.5">{d.value}</div>
+            <div className="flex flex-wrap items-center gap-2 mt-4 pt-3 border-t border-line-2">
+              <Link href={`/deal/${d.slug}`} className={actionBtn}>
+                ดู
+              </Link>
+              <Link href={`/admin/deals/${d.id}`} className={actionBtn}>
+                แก้ไข
+              </Link>
+              <DeleteButton action={deleteDeal} id={d.id} />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="hidden md:block border border-line-2 overflow-x-auto">
         <table className="w-full th text-[13px]">
           <thead className="bg-sand/60">
             <tr>
-              {["ผลงาน", "ประเภท", "ทำเล", "มูลค่า", "วันที่", "สถานะ", "จัดการ"].map(
-                (h) => (
-                  <th
-                    key={h}
-                    className="text-left kicker px-4 py-3 whitespace-nowrap"
-                  >
-                    {h}
-                  </th>
-                ),
-              )}
+              {[
+                "ผลงาน",
+                "ประเภท",
+                "ทำเล",
+                "มูลค่า",
+                "วันที่",
+                "สถานะ",
+                "จัดการ",
+              ].map((h) => (
+                <th
+                  key={h}
+                  className="text-left kicker px-4 py-3 whitespace-nowrap"
+                >
+                  {h}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
@@ -63,16 +100,10 @@ export default function AdminDeals() {
                 </td>
                 <td className="px-4 py-3 whitespace-nowrap">
                   <div className="flex items-center gap-2">
-                    <Link
-                      href={`/deal/${d.slug}`}
-                      className="th text-[12px] px-3 py-1.5 border border-line-2 hover:border-ink transition-colors"
-                    >
+                    <Link href={`/deal/${d.slug}`} className={actionBtn}>
                       ดู
                     </Link>
-                    <Link
-                      href={`/admin/deals/${d.id}`}
-                      className="th text-[12px] px-3 py-1.5 border border-line-2 hover:border-ink transition-colors"
-                    >
+                    <Link href={`/admin/deals/${d.id}`} className={actionBtn}>
                       แก้ไข
                     </Link>
                     <DeleteButton action={deleteDeal} id={d.id} />

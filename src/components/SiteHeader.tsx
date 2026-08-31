@@ -46,9 +46,22 @@ export default function SiteHeader() {
         <div className="flex items-center gap-4 lg:gap-[22px] shrink-0">
           <Link
             href="/favorites"
-            className="hidden lg:block text-[10px] tracking-[0.28em] text-faint hover:text-ink-2"
+            aria-label="รายการที่บันทึกไว้"
+            className="hidden lg:flex items-center gap-1.5 th text-[13px] text-ink-2 hover:text-ink transition-colors"
           >
-            SAVED
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M12 3.5l2.6 5.3 5.9.86-4.25 4.14 1 5.85L12 16.9l-5.25 2.76 1-5.85L3.5 9.66l5.9-.86L12 3.5z" />
+            </svg>
+            บันทึก
           </Link>
           <span className="hidden xl:block text-[13px] tracking-[0.02em] text-ink-2 whitespace-nowrap">
             {SITE.phone}

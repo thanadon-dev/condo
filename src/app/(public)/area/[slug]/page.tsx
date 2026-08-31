@@ -1,8 +1,13 @@
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import type { Metadata } from "next";
 import { Section } from "@/components/Section";
 import PropertyCard from "@/components/PropertyCard";
-import { listAreas, propertiesInArea, coverMap } from "@/lib/queries";
+import {
+  listAreas,
+  propertiesInArea,
+  coverMap,
+  aliasTarget,
+} from "@/lib/queries";
 import { decodeSlug } from "@/lib/route";
 
 export const revalidate = 3600;
@@ -39,7 +44,11 @@ export default async function AreaPage({
 }) {
   const { slug } = await params;
   const a = areaBySlug(slug);
-  if (!a) notFound();
+  if (!a) {
+    const to = aliasTarget("area", decodeSlug(slug));
+    if (to) permanentRedirect(`/area/${to}`);
+    notFound();
+  }
 
   const items = propertiesInArea(a);
   const covers = coverMap(items.map((p) => p.id));

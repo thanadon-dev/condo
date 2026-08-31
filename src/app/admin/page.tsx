@@ -41,7 +41,35 @@ export default function AdminHome() {
             ยังไม่มีลูกค้าติดต่อเข้ามา
           </p>
         ) : (
-          <div className="mt-6 border border-line-2 overflow-x-auto">
+          <>
+          <div className="mt-6 grid gap-3 md:hidden">
+            {recent.map((l) => (
+              <div key={l.id} className="border border-line-2 p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="th text-[14.5px] font-medium">{l.name}</div>
+                  <span className="th text-[11px] px-2 py-1 border border-line-2 shrink-0 text-muted">
+                    {STATUS_LABEL[l.status] ?? l.status}
+                  </span>
+                </div>
+                <a
+                  href={`tel:${l.phone.replace(/[\s-]/g, "")}`}
+                  className="th block mt-1.5 text-[13.5px]"
+                >
+                  {l.phone}
+                </a>
+                <div className="th text-[12px] text-muted mt-2">
+                  {l.created_at.slice(0, 16)} · {l.kind}
+                </div>
+                {l.property_title && (
+                  <div className="th text-[12px] text-muted mt-1">
+                    สนใจ: {l.property_title}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-6 hidden md:block border border-line-2 overflow-x-auto">
             <table className="w-full th text-[13px]">
               <thead className="bg-sand/60">
                 <tr>
@@ -77,6 +105,7 @@ export default function AdminHome() {
               </tbody>
             </table>
           </div>
+          </>
         )}
       </section>
     </>

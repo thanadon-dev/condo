@@ -1,7 +1,12 @@
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { listArticles, articleBySlug, relatedArticles } from "@/lib/queries";
+import {
+  listArticles,
+  articleBySlug,
+  relatedArticles,
+  aliasTarget,
+} from "@/lib/queries";
 import LeadForm from "@/components/LeadForm";
 import { thaiDate, SITE, SITE_URL } from "@/lib/site";
 import { decodeSlug } from "@/lib/route";
@@ -40,8 +45,13 @@ export default async function ArticlePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const a = articleBySlug(decodeSlug(slug));
-  if (!a) notFound();
+  const key = decodeSlug(slug);
+  const a = articleBySlug(key);
+  if (!a) {
+    const to = aliasTarget("article", key);
+    if (to) permanentRedirect(`/journal/${to}`);
+    notFound();
+  }
 
   const paras = a.body.split(/\n{2,}/).filter(Boolean);
   const related = relatedArticles(a);

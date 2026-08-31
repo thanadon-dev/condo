@@ -20,6 +20,7 @@ export function db(): DatabaseSync {
     "schema-003-leads.sql",
     "schema-005-pin.sql",
     "schema-006-settings.sql",
+    "schema-007-slug-aliases.sql",
   ]) {
     conn.exec(readFileSync(path.join(process.cwd(), "src/lib", f), "utf8"));
   }

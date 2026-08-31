@@ -85,6 +85,16 @@ export function listProperties(): Property[] {
   );
 }
 
+/** slug เดิมที่ถูกเปลี่ยนแล้ว -> slug ปัจจุบัน (ใช้ 301 redirect) */
+export function aliasTarget(kind: string, oldSlug: string): string | null {
+  const r = one<{ new_slug: string }>(
+    "SELECT new_slug FROM slug_aliases WHERE kind = ? AND old_slug = ?",
+    kind,
+    oldSlug,
+  );
+  return r?.new_slug ?? null;
+}
+
 export function propertyBySlug(slug: string): Property | null {
   return one<Property>(
     "SELECT * FROM properties WHERE slug = ? AND published = 1",

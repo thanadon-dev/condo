@@ -11,6 +11,9 @@ export const dynamic = "force-dynamic";
 export default function AdminArticles() {
   const items = adminArticles();
 
+  const actionBtn =
+    "th text-[12px] px-3 py-1.5 border border-line-2 hover:border-ink transition-colors";
+
   return (
     <>
       <div className="flex flex-wrap items-end justify-between gap-4 mb-8">
@@ -28,7 +31,34 @@ export default function AdminArticles() {
         />
       </div>
 
-      <div className="border border-line-2 overflow-x-auto">
+      <div className="grid gap-3 md:hidden">
+        {items.map((a) => (
+          <div key={a.id} className="border border-line-2 p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="th text-[14.5px] font-medium leading-snug min-w-0">
+                {a.title}
+              </div>
+              <span className="th text-[11px] px-2 py-1 border border-line-2 shrink-0 text-muted">
+                {a.published ? "เผยแพร่" : "ซ่อน"}
+              </span>
+            </div>
+            <div className="th text-[12px] text-muted mt-2">
+              {a.tag} · {thaiDate(a.published_on)} · อ่าน {a.read_time}
+            </div>
+            <div className="flex flex-wrap items-center gap-2 mt-4 pt-3 border-t border-line-2">
+              <Link href={`/journal/${a.slug}`} className={actionBtn}>
+                ดู
+              </Link>
+              <Link href={`/admin/articles/${a.id}`} className={actionBtn}>
+                แก้ไข
+              </Link>
+              <DeleteButton action={deleteArticle} id={a.id} />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="hidden md:block border border-line-2 overflow-x-auto">
         <table className="w-full th text-[13px]">
           <thead className="bg-sand/60">
             <tr>
@@ -62,16 +92,10 @@ export default function AdminArticles() {
                 </td>
                 <td className="px-4 py-3 whitespace-nowrap">
                   <div className="flex items-center gap-2">
-                    <Link
-                      href={`/journal/${a.slug}`}
-                      className="th text-[12px] px-3 py-1.5 border border-line-2 hover:border-ink transition-colors"
-                    >
+                    <Link href={`/journal/${a.slug}`} className={actionBtn}>
                       ดู
                     </Link>
-                    <Link
-                      href={`/admin/articles/${a.id}`}
-                      className="th text-[12px] px-3 py-1.5 border border-line-2 hover:border-ink transition-colors"
-                    >
+                    <Link href={`/admin/articles/${a.id}`} className={actionBtn}>
                       แก้ไข
                     </Link>
                     <DeleteButton action={deleteArticle} id={a.id} />

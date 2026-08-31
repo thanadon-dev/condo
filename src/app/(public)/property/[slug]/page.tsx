@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
@@ -9,6 +9,7 @@ import {
   poisOf,
   nearbyProperties,
   coverMap,
+  aliasTarget,
 } from "@/lib/queries";
 import Gallery from "@/components/Gallery";
 import LocationSection from "@/components/LocationSection";
@@ -48,8 +49,13 @@ export default async function PropertyPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const p = propertyBySlug(decodeSlug(slug));
-  if (!p) notFound();
+  const key = decodeSlug(slug);
+  const p = propertyBySlug(key);
+  if (!p) {
+    const to = aliasTarget("property", key);
+    if (to) permanentRedirect(`/property/${to}`);
+    notFound();
+  }
 
   const SITE = getSettings();
   const amenities = amenitiesOf(p);

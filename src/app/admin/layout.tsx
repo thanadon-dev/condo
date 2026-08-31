@@ -49,12 +49,12 @@ export default async function AdminLayout({
         </div>
       </header>
 
-      <nav className="flex gap-2 py-5 sm:py-6 border-b border-line-2 overflow-x-auto -mx-5 px-5 sm:mx-0 sm:px-0 sm:flex-wrap">
+      <nav className="flex flex-wrap gap-2 py-5 sm:py-6 border-b border-line-2">
         {NAV.map((n) => (
           <Link
             key={n.href}
             href={n.href}
-            className="th text-[13px] px-5 py-2.5 border border-line-2 hover:border-ink transition-colors whitespace-nowrap shrink-0"
+            className="th text-[12.5px] sm:text-[13px] px-4 sm:px-5 py-2.5 border border-line-2 hover:border-ink transition-colors whitespace-nowrap"
           >
             {n.label}
           </Link>

@@ -1,7 +1,7 @@
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { listDeals, dealBySlug } from "@/lib/queries";
+import { listDeals, dealBySlug, aliasTarget } from "@/lib/queries";
 import { decodeSlug } from "@/lib/route";
 import { thaiDate, SITE, SITE_URL } from "@/lib/site";
 import LeadForm from "@/components/LeadForm";
@@ -35,8 +35,13 @@ export default async function DealPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const d = dealBySlug(decodeSlug(slug));
-  if (!d) notFound();
+  const key = decodeSlug(slug);
+  const d = dealBySlug(key);
+  if (!d) {
+    const to = aliasTarget("deal", key);
+    if (to) permanentRedirect(`/deal/${to}`);
+    notFound();
+  }
 
   const jsonLd = {
     "@context": "https://schema.org",
