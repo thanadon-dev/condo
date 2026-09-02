@@ -8,21 +8,33 @@ const DATA_DIR =
 
 let handle: DatabaseSync | null = null;
 
+/**
+ * CONDO_READONLY=1 -> เปิด DB แบบอ่านอย่างเดียว ไม่รัน migration/schema เขียน
+ * ใช้กับ instance ทดลองธีม (condo2, condo3) ที่ชี้ไปไฟล์ DB เดียวกับตัวจริง
+ * กันพลาดเขียนทับข้อมูลจริงจากธีมที่ยังทดสอบอยู่
+ */
+const READONLY = process.env.CONDO_READONLY === "1";
+
 export function db(): DatabaseSync {
   if (handle) return handle;
   mkdirSync(DATA_DIR, { recursive: true });
-  const conn = new DatabaseSync(path.join(DATA_DIR, "condo.db"));
-  conn.exec("PRAGMA journal_mode = WAL");
-  conn.exec("PRAGMA foreign_keys = ON");
-  for (const f of [
-    "schema.sql",
-    "schema-002-pois.sql",
-    "schema-003-leads.sql",
-    "schema-005-pin.sql",
-    "schema-006-settings.sql",
-    "schema-007-slug-aliases.sql",
-  ]) {
-    conn.exec(readFileSync(path.join(process.cwd(), "src/lib", f), "utf8"));
+  const dbPath = path.join(DATA_DIR, "condo.db");
+  const conn = READONLY
+    ? new DatabaseSync(dbPath, { readOnly: true })
+    : new DatabaseSync(dbPath);
+  if (!READONLY) {
+    conn.exec("PRAGMA journal_mode = WAL");
+    conn.exec("PRAGMA foreign_keys = ON");
+    for (const f of [
+      "schema.sql",
+      "schema-002-pois.sql",
+      "schema-003-leads.sql",
+      "schema-005-pin.sql",
+      "schema-006-settings.sql",
+      "schema-007-slug-aliases.sql",
+    ]) {
+      conn.exec(readFileSync(path.join(process.cwd(), "src/lib", f), "utf8"));
+    }
   }
   handle = conn;
   return conn;

@@ -5,6 +5,12 @@ export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   if (!pathname.startsWith("/admin")) return NextResponse.next();
 
+  // instance ทดลองธีม (DB read-only) -> ปิดหลังบ้านสนิท กันหน้า error ดิบ
+  // แก้ข้อมูลได้ที่ condo.thanadon.com ตัวจริงเท่านั้น
+  if (process.env.CONDO_READONLY === "1") {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+
   if (!req.cookies.get(COOKIE)?.value) {
     const url = req.nextUrl.clone();
     url.pathname = "/login";
