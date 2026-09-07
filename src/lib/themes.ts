@@ -29,6 +29,43 @@ export type CardShape =
 /** ตำแหน่งราคาบนการ์ด */
 export type PricePos = "onImage" | "belowTitle" | "footerRow";
 
+/** ทรง hero — mockup มี 5 แบบ */
+export type HeroShape =
+  | "overlay" // รูปเต็มจอ ข้อความทับล่างซ้าย (1a, 6a)
+  | "split" // แบ่งครึ่ง: ข้อความบนพื้นสี | รูป (2a)
+  | "centered" // รูปเต็มจอ ข้อความจัดกลาง (3a, 5a)
+  | "boxed" // รูปเต็มจอ + กล่องข้อความลอยทับ (4a, 8a)
+  | "stacked"; // รูปเป็นบล็อกของตัวเอง ข้อความอยู่ใต้/ข้าง (7a, 9a, 10a)
+
+/** ทรงแถบค้นหา */
+export type SearchShape =
+  | "overlap" // การ์ดลอยทับ hero (margin ติดลบ) (1a, 4a)
+  | "block" // บล็อกทึบเต็มความกว้าง ต่อจาก hero (2a, 7a)
+  | "bare" // ไม่มีพื้น มีแค่เส้นคั่น (3a, 5a, 6a, 9a, 10a)
+  | "inHero"; // อยู่ในกล่อง hero เลย (8a)
+
+/** ทรงส่วนทำเล */
+export type AreasShape =
+  | "weighted" // กริด 3 ช่อง ช่องแรกกว้างกว่า (1a)
+  | "duo" // 2 คอลัมน์ สูง (2a)
+  | "list" // แถวแนวนอน รูปเล็กซ้าย (5a)
+  | "tiles" // จตุรัสชิดกัน (6a)
+  | "framed" // การ์ดมีกรอบซ้อน จัดกลาง (7a)
+  | "grid"; // กริด 3 เท่ากัน (3a, 4a, 8a, 9a, 10a)
+
+/** ทรงบล็อกสถิติ */
+export type StatsShape =
+  | "plain" // ตัวเลขบน ป้ายล่าง (1a, 2a, 3a, 5a, 7a, 9a)
+  | "cards" // การ์ดมีพื้น มุมโค้ง (4a, 8a)
+  | "inline" // ตัวเลขซ้าย ข้อความขวา (6a)
+  | "rows"; // เรียงเป็นแถวมีเส้นคั่น (10a)
+
+/** ทรงการ์ดบทความ */
+export type JournalShape =
+  | "ruled" // เส้นคาดบน ไม่มีพื้น (1a, 3a, 6a, 9a)
+  | "filled" // การ์ดมีพื้น/กรอบ (2a, 4a, 7a, 8a, 10a)
+  | "framed"; // กรอบเส้น ไม่มีพื้น (5a)
+
 export type Theme = {
   id: ThemeId;
   code: string; // รหัสอ้างอิงกับไฟล์ mockup (1a..10a)
@@ -61,6 +98,29 @@ export type Theme = {
     centerNav: boolean;
     /** เงาการ์ด */
     cardShadow: string;
+
+    /* ---- โครง section (ถอดจาก mockup ทีละธีม) ---- */
+    hero: HeroShape;
+    /** ความสูง hero (desktop) */
+    heroH: string;
+    search: SearchShape;
+    /** สัดส่วนคอลัมน์ของแถบค้นหา */
+    searchCols: string;
+    areas: AreasShape;
+    /** อัตราส่วนรูปในส่วนทำเล */
+    areasAspect: string;
+    stats: StatsShape;
+    journal: JournalShape;
+    /** ความกว้างเนื้อหาสูงสุด (mockup ใช้ 1040–1320 ต่างกัน) */
+    maxW: string;
+    /** หัวข้อ section จัดกึ่งกลาง + มีเส้นประดับ (7a) */
+    centerSections: boolean;
+    /** จำนวนคอลัมน์กริดทรัพย์บน desktop (mockup ใช้ 2/3/4 ต่างกัน) */
+    cols: 2 | 3 | 4;
+    /** ปุ่มหลักเป็นเส้นใต้แทนปุ่มทึบ (9a minimal) */
+    ghostBtn: boolean;
+    /** เลขลำดับ 01/02 บนการ์ดทรัพย์ (5a mono) */
+    cardIndex?: boolean;
   };
 };
 
@@ -88,6 +148,7 @@ export const THEMES: Theme[] = [
       "--t-card-border": "transparent",
       "--t-header": "rgba(255,255,255,.92)",
       "--t-panel-bg": "#ffffff",
+      "--t-stats-bg": "#f7f6f4",
       "--t-footer": "#faf9f7",
       "--t-footer-ink": "#141414",
       "--t-footer-muted": "#6b6862",
@@ -113,6 +174,18 @@ export const THEMES: Theme[] = [
       sep: "·",
       centerNav: false,
       cardShadow: "none",
+      hero: "overlay",
+      heroH: "660px",
+      search: "overlap",
+      searchCols: "1.35fr .95fr 1.3fr auto",
+      areas: "weighted",
+      areasAspect: "",
+      stats: "plain",
+      journal: "ruled",
+      maxW: "1280px",
+      centerSections: false,
+      cols: 3,
+      ghostBtn: false,
     },
   },
   {
@@ -137,6 +210,7 @@ export const THEMES: Theme[] = [
       "--t-card": "#fffdf7",
       "--t-card-border": "#0d3b3a",
       "--t-panel-bg": "#fffdf7",
+      "--t-stats-bg": "#0d3b3a",
       "--t-card-border-w": "2px",
       "--t-header": "#fffdf7",
       "--t-footer": "#082827",
@@ -164,6 +238,18 @@ export const THEMES: Theme[] = [
       sep: "◆",
       centerNav: false,
       cardShadow: "none",
+      hero: "split",
+      heroH: "560px",
+      search: "block",
+      searchCols: "1.35fr .95fr 1.3fr auto",
+      areas: "duo",
+      areasAspect: "",
+      stats: "plain",
+      journal: "filled",
+      maxW: "1280px",
+      centerSections: false,
+      cols: 3,
+      ghostBtn: false,
     },
   },
   {
@@ -189,6 +275,7 @@ export const THEMES: Theme[] = [
       "--t-card-border": "transparent",
       "--t-header": "rgba(20,17,15,.92)",
       "--t-panel-bg": "#1c1815",
+      "--t-stats-bg": "#1c1815",
       "--t-footer": "#0f0d0b",
       "--t-footer-ink": "#f7f3ec",
       "--t-footer-muted": "#a39b90",
@@ -214,6 +301,18 @@ export const THEMES: Theme[] = [
       sep: "·",
       centerNav: false,
       cardShadow: "none",
+      hero: "centered",
+      heroH: "680px",
+      search: "bare",
+      searchCols: "1.3fr 1fr 1.35fr auto",
+      areas: "grid",
+      areasAspect: "3/4",
+      stats: "plain",
+      journal: "ruled",
+      maxW: "1280px",
+      centerSections: true,
+      cols: 2,
+      ghostBtn: false,
     },
   },
   {
@@ -239,6 +338,7 @@ export const THEMES: Theme[] = [
       "--t-card-border": "transparent",
       "--t-header": "rgba(255,253,249,.92)",
       "--t-panel-bg": "#fffdf9",
+      "--t-stats-bg": "#f4e7db",
       "--t-footer": "#3b2d24",
       "--t-footer-ink": "#fff6ee",
       "--t-footer-muted": "rgba(255,246,238,.7)",
@@ -264,6 +364,18 @@ export const THEMES: Theme[] = [
       sep: "·",
       centerNav: false,
       cardShadow: "0 12px 30px -20px rgba(90,60,40,.3)",
+      hero: "boxed",
+      heroH: "600px",
+      search: "overlap",
+      searchCols: "1.25fr 1fr 1.35fr auto",
+      areas: "grid",
+      areasAspect: "4/3",
+      stats: "cards",
+      journal: "filled",
+      maxW: "1120px",
+      centerSections: false,
+      cols: 2,
+      ghostBtn: false,
     },
   },
   {
@@ -288,6 +400,7 @@ export const THEMES: Theme[] = [
       "--t-card": "#ffffff",
       "--t-card-border": "#15181c",
       "--t-panel-bg": "#ffffff",
+      "--t-stats-bg": "#15181c",
       "--t-card-border-w": "1px",
       "--t-header": "#f2f3f0",
       "--t-footer": "#15181c",
@@ -315,6 +428,19 @@ export const THEMES: Theme[] = [
       sep: "·",
       centerNav: false,
       cardShadow: "none",
+      hero: "centered",
+      heroH: "620px",
+      search: "bare",
+      searchCols: "2fr 1fr 1fr 1fr",
+      areas: "list",
+      areasAspect: "",
+      stats: "plain",
+      journal: "framed",
+      maxW: "1280px",
+      centerSections: false,
+      cols: 3,
+      ghostBtn: false,
+      cardIndex: true,
     },
   },
   {
@@ -340,6 +466,7 @@ export const THEMES: Theme[] = [
       "--t-card-border": "transparent",
       "--t-header": "rgba(251,251,249,.94)",
       "--t-panel-bg": "#ffffff",
+      "--t-stats-bg": "#101010",
       "--t-footer": "#101010",
       "--t-footer-ink": "#ffffff",
       "--t-footer-muted": "rgba(255,255,255,.66)",
@@ -365,6 +492,18 @@ export const THEMES: Theme[] = [
       sep: "·",
       centerNav: false,
       cardShadow: "none",
+      hero: "overlay",
+      heroH: "720px",
+      search: "bare",
+      searchCols: "1.2fr .9fr 1.3fr auto",
+      areas: "tiles",
+      areasAspect: "1/1",
+      stats: "inline",
+      journal: "ruled",
+      maxW: "1320px",
+      centerSections: false,
+      cols: 3,
+      ghostBtn: false,
     },
   },
   {
@@ -390,6 +529,7 @@ export const THEMES: Theme[] = [
       "--t-card-border": "transparent",
       "--t-header": "rgba(246,242,233,.94)",
       "--t-panel-bg": "#ffffff",
+      "--t-stats-bg": "#dfe9e2",
       "--t-footer": "#1f3350",
       "--t-footer-ink": "#f6f2e9",
       "--t-footer-muted": "#cbd6e6",
@@ -415,6 +555,18 @@ export const THEMES: Theme[] = [
       sep: "◆",
       centerNav: true,
       cardShadow: "none",
+      hero: "stacked",
+      heroH: "520px",
+      search: "block",
+      searchCols: "1.25fr 1fr 1.3fr auto",
+      areas: "framed",
+      areasAspect: "3/4",
+      stats: "plain",
+      journal: "filled",
+      maxW: "1180px",
+      centerSections: true,
+      cols: 2,
+      ghostBtn: false,
     },
   },
   {
@@ -439,6 +591,7 @@ export const THEMES: Theme[] = [
       "--t-card": "rgba(255,255,255,.66)",
       "--t-card-border": "rgba(255,255,255,.7)",
       "--t-panel-bg": "rgba(255,255,255,.92)",
+      "--t-stats-bg": "rgba(255,255,255,.8)",
       "--t-card-border-w": "1px",
       "--t-header": "rgba(255,255,255,.66)",
       "--t-footer": "#10182b",
@@ -466,6 +619,18 @@ export const THEMES: Theme[] = [
       sep: "·",
       centerNav: false,
       cardShadow: "0 18px 44px -26px rgba(16,24,43,.42)",
+      hero: "boxed",
+      heroH: "620px",
+      search: "inHero",
+      searchCols: "1fr 1fr",
+      areas: "grid",
+      areasAspect: "5/4",
+      stats: "cards",
+      journal: "filled",
+      maxW: "1280px",
+      centerSections: false,
+      cols: 3,
+      ghostBtn: false,
     },
   },
   {
@@ -491,6 +656,7 @@ export const THEMES: Theme[] = [
       "--t-card-border": "transparent",
       "--t-header": "rgba(252,252,251,.92)",
       "--t-panel-bg": "#ffffff",
+      "--t-stats-bg": "#f0f0ee",
       "--t-footer": "#f0f0ee",
       "--t-footer-ink": "#242424",
       "--t-footer-muted": "#6e6e6b",
@@ -516,6 +682,18 @@ export const THEMES: Theme[] = [
       sep: "·",
       centerNav: false,
       cardShadow: "none",
+      hero: "stacked",
+      heroH: "480px",
+      search: "bare",
+      searchCols: "1.2fr 1fr 1.3fr auto",
+      areas: "grid",
+      areasAspect: "1/1",
+      stats: "plain",
+      journal: "ruled",
+      maxW: "1040px",
+      centerSections: false,
+      cols: 2,
+      ghostBtn: true,
     },
   },
   {
@@ -540,6 +718,7 @@ export const THEMES: Theme[] = [
       "--t-card": "#121a2e",
       "--t-card-border": "rgba(95,212,230,.16)",
       "--t-panel-bg": "#121a2e",
+      "--t-stats-bg": "#060a14",
       "--t-card-border-w": "1px",
       "--t-header": "rgba(10,16,32,.92)",
       "--t-footer": "#060a14",
@@ -567,6 +746,18 @@ export const THEMES: Theme[] = [
       sep: "·",
       centerNav: false,
       cardShadow: "none",
+      hero: "stacked",
+      heroH: "560px",
+      search: "bare",
+      searchCols: "2fr 1fr 1fr 1fr",
+      areas: "grid",
+      areasAspect: "16/10",
+      stats: "rows",
+      journal: "filled",
+      maxW: "1320px",
+      centerSections: false,
+      cols: 4,
+      ghostBtn: false,
     },
   },
 ];
@@ -596,9 +787,14 @@ export function themeVars(t: Theme): Record<string, string> {
     "--t-card-shadow": t.layout.cardShadow,
     // รูปในการ์ดทรงตั้ง: ธีมที่การ์ดมีกรอบ/พื้น จะโค้งที่ตัวการ์ดแทน (overflow-hidden)
     // ธีมที่การ์ดโปร่ง (stack/overlay) ต้องโค้งที่ตัวรูปเอง ไม่งั้นมุมเหลี่ยมโดดจากธีม
+    // พื้นบล็อกสถิติ (ธีมส่วนใหญ่เป็นบล็อกสีเข้ม/สีทึบต่างจากพื้นหน้า)
+    "--t-stats-bg": t.vars["--t-stats-bg"] || t.vars["--t-bg-3"],
+    // ปุ่มในแถบค้นหาทึบ: ธีมมุมโค้งใช้มุมของธีม ธีมเหลี่ยมเป็น 0
+    "--t-radius-btn": t.layout.radius,
     "--t-media-radius":
       t.layout.card === "framed" || t.layout.card === "row"
         ? "0px"
         : t.layout.radius,
   };
 }
+

@@ -20,11 +20,14 @@ export default function PropertyCard({
   cover,
   priority = false,
   theme,
+  index,
 }: {
   p: Property;
   cover?: PropertyImage;
   priority?: boolean;
   theme: Theme;
+  /** ลำดับในกริด — ใช้กับธีมที่โชว์เลข 01/02 บนการ์ด */
+  index?: number;
 }) {
   const { card, price: pricePos, sep } = theme.layout;
   const row = card === "row";
@@ -33,7 +36,7 @@ export default function PropertyCard({
 
   const spec = (
     <div
-      className={`flex gap-[14px] th text-[12.5px] text-ink-2 whitespace-nowrap ${
+      className={`flex flex-wrap gap-x-[14px] gap-y-1 th text-[12.5px] text-ink-2 ${
         center ? "justify-center" : ""
       }`}
     >
@@ -95,19 +98,31 @@ export default function PropertyCard({
         </div>
       )}
 
+      {theme.layout.cardIndex && typeof index === "number" && (
+        <span
+          className="absolute left-0 top-0 num text-[11px] px-2.5 py-1.5 z-10"
+          style={{
+            background: "var(--t-accent)",
+            color: "var(--t-accent-ink)",
+          }}
+        >
+          {String(index + 1).padStart(2, "0")}
+        </span>
+      )}
+
       <FavButton id={p.id} className="absolute right-3 top-3 z-10" />
     </div>
   );
 
   const body = (
     <div
-      className={`flex flex-col gap-[9px] ${center ? "items-center text-center" : ""} ${
-        framed || row ? "p-[18px] pt-[14px]" : ""
+      className={`flex flex-col gap-[9px] min-w-0 ${center ? "items-center text-center" : ""} ${
+        framed ? "p-[18px] pt-[14px]" : row ? "py-1 pr-1" : ""
       }`}
     >
       <span className="kicker text-[9.5px]">{p.type}</span>
 
-      <h3 className="t-h3">
+      <h3 className="t-h3 break-words">
         <Link
           href={`/property/${p.slug}`}
           className="hover:underline underline-offset-[6px] decoration-line"
@@ -149,7 +164,7 @@ export default function PropertyCard({
   if (row) {
     return (
       <article
-        className="group grid grid-cols-[130px_1fr] sm:grid-cols-[210px_1fr] gap-4 t-card rise p-3"
+        className="group grid grid-cols-[104px_minmax(0,1fr)] sm:grid-cols-[210px_minmax(0,1fr)] gap-3 sm:gap-4 t-card rise p-3 overflow-hidden"
         style={{ boxShadow: "var(--t-card-shadow)" }}
       >
         {media}

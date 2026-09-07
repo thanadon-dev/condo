@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import type { Theme } from "@/lib/themes";
 
 const TYPES = ["ทุกประเภท", "คอนโด", "บ้านเช่า"];
 const CHIPS = [
@@ -22,12 +23,15 @@ export default function HeroSearch({
   areas,
   priceMin,
   priceMax,
+  theme,
 }: {
   areas: string[];
   priceMin: number;
   priceMax: number;
+  theme: Theme;
 }) {
   const router = useRouter();
+  const L = theme.layout;
 
   // ขอบเขต slider = ราคาจริงต่ำสุด/สูงสุดในระบบ
   const MIN = floorTo(priceMin || 0);
@@ -64,87 +68,121 @@ export default function HeroSearch({
     router.push(`/properties?${new URLSearchParams({ type: label })}`);
   }
 
-  const label = "text-[9.5px] tracking-[0.3em] uppercase text-dim";
+  const label = "kicker text-[9.5px]";
   // color: inherit ไม่พอ — select/option ใน Chrome ใช้สีระบบถ้าไม่กำหนด
   const field =
     "th w-full text-[15px] bg-transparent border-0 outline-none p-0 text-ink [&>option]:text-black";
 
+  // bare = ไม่มีพื้น ใช้เส้นคั่นอย่างเดียว (3a, 5a, 6a, 9a, 10a)
+  const bare = L.search === "bare";
+  // inHero = อยู่ในกล่อง hero แล้ว ไม่ต้องมีพื้นซ้อน (8a)
+  const inHero = L.search === "inHero";
+
+  const cellBorder = bare
+    ? "border-b md:border-b-0 md:border-r border-line-2 last:border-r-0"
+    : "border-b md:border-b-0 md:border-r border-line-2";
+
+  const cell = `px-0 md:px-[26px] first:md:pl-0 py-5 flex flex-col gap-[7px] ${
+    bare ? cellBorder : cellBorder
+  }`;
+
   return (
     <>
-      <div className="t-panel overflow-hidden grid grid-cols-1 md:grid-cols-[1.35fr_.95fr_1.3fr_auto] items-stretch">
-        <label className="px-[26px] py-5 flex flex-col gap-[7px] border-b md:border-b-0 md:border-r border-line-2">
-          <span className={label}>ทำเล / โครงการ</span>
-          <input
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && push()}
-            list="condo-areas"
-            placeholder="พิมพ์ทำเล เช่น สุขุมวิท"
-            aria-label="ค้นหาทำเลหรือโครงการ"
-            className={field}
-          />
-          <datalist id="condo-areas">
-            {areas.map((a) => (
-              <option key={a} value={a} />
-            ))}
-          </datalist>
-        </label>
-
-        <label className="px-[26px] py-5 flex flex-col gap-[7px] border-b md:border-b-0 md:border-r border-line-2">
-          <span className={label}>ประเภท</span>
-          <select
-            value={cat}
-            onChange={(e) => setCat(e.target.value)}
-            aria-label="ประเภททรัพย์"
-            className={`${field} cursor-pointer appearance-none`}
-          >
-            {TYPES.map((t) => (
-              <option key={t} value={t === "ทุกประเภท" ? "" : t}>
-                {t}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <div className="px-[26px] py-[18px] flex flex-col gap-1 border-b md:border-b-0 md:border-r border-line-2">
-          <div className="flex justify-between items-baseline gap-3">
-            <span className={label}>ค่าเช่า</span>
-            <span className="num text-[13px] text-ink whitespace-nowrap">
-              {priceLabel}
-            </span>
-          </div>
-          <input
-            type="range"
-            min={MIN}
-            max={MAX}
-            step={STEP}
-            value={pMin}
-            onChange={(e) => setPMin(Number(e.target.value))}
-            aria-label="ค่าเช่าต่ำสุด (บาทต่อเดือน)"
-          />
-          <input
-            type="range"
-            min={MIN}
-            max={MAX}
-            step={STEP}
-            value={pMax}
-            onChange={(e) => setPMax(Number(e.target.value))}
-            aria-label="ค่าเช่าสูงสุด (บาทต่อเดือน)"
-          />
-        </div>
-
-        <button
-          onClick={push}
-          className="t-btn th text-[12px] tracking-[0.12em] px-[46px] py-5"
+      <div
+        className={`grid grid-cols-1 items-stretch overflow-hidden ${
+          bare || inHero ? "" : "t-panel"
+        } ${bare ? "border-y border-line-2" : ""}`}
+        style={{
+          gridTemplateColumns: undefined,
+          // สัดส่วนคอลัมน์ของแต่ละธีมถอดจาก mockup
+          ["--search-cols" as string]: L.searchCols,
+          padding: inHero ? 0 : undefined,
+        }}
+      >
+        <div
+          className="grid grid-cols-1 md:grid-cols-[var(--search-cols)] items-stretch w-full"
+          style={{ padding: bare ? 0 : undefined }}
         >
-          ค้นหา
-        </button>
+          <label className={cell}>
+            <span className={label}>ทำเล / โครงการ</span>
+            <input
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && push()}
+              list="condo-areas"
+              placeholder="พิมพ์ทำเล เช่น สุขุมวิท"
+              aria-label="ค้นหาทำเลหรือโครงการ"
+              className={field}
+            />
+            <datalist id="condo-areas">
+              {areas.map((a) => (
+                <option key={a} value={a} />
+              ))}
+            </datalist>
+          </label>
+
+          <label className={cell}>
+            <span className={label}>ประเภท</span>
+            <select
+              value={cat}
+              onChange={(e) => setCat(e.target.value)}
+              aria-label="ประเภททรัพย์"
+              className={`${field} cursor-pointer appearance-none`}
+            >
+              {TYPES.map((t) => (
+                <option key={t} value={t === "ทุกประเภท" ? "" : t}>
+                  {t}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <div className={`${cell} gap-1`}>
+            <div className="flex justify-between items-baseline gap-3">
+              <span className={label}>ค่าเช่า</span>
+              <span className="num text-[13px] text-ink whitespace-nowrap">
+                {priceLabel}
+              </span>
+            </div>
+            <input
+              type="range"
+              min={MIN}
+              max={MAX}
+              step={STEP}
+              value={pMin}
+              onChange={(e) => setPMin(Number(e.target.value))}
+              aria-label="ค่าเช่าต่ำสุด (บาทต่อเดือน)"
+            />
+            <input
+              type="range"
+              min={MIN}
+              max={MAX}
+              step={STEP}
+              value={pMax}
+              onChange={(e) => setPMax(Number(e.target.value))}
+              aria-label="ค่าเช่าสูงสุด (บาทต่อเดือน)"
+            />
+          </div>
+
+          <button
+            onClick={push}
+            className={`t-btn th text-[13px] tracking-[0.1em] px-[46px] ${
+              bare ? "py-4 my-3 md:ml-6" : "py-5"
+            }`}
+            style={{
+              // ธีมมุมโค้ง: ปุ่มในแถบทึบใช้มุมของธีม ปุ่มในแถบเปล่าใช้ pill
+              borderRadius: bare
+                ? "var(--t-radius-pill)"
+                : "var(--t-radius-btn, 0px)",
+            }}
+          >
+            ค้นหา
+          </button>
+        </div>
       </div>
 
       <div className="flex flex-wrap items-center gap-2.5 pt-5">
-        <span className="text-[11px] tracking-[0.24em] text-faint mr-2">
-          หมวดหมู่
-        </span>
+        <span className="kicker text-[10px] mr-2">หมวดหมู่</span>
         {CHIPS.map((c) => {
           const on = chipOn === c;
           return (

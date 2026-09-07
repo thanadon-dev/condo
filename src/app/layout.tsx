@@ -69,6 +69,7 @@ export default function RootLayout({
     <html
       lang="th"
       data-theme={theme.id}
+      data-btn={theme.layout.ghostBtn ? "ghost" : "solid"}
       className={ALL_FONT_CLASSES}
       style={
         {

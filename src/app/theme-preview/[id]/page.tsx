@@ -45,6 +45,7 @@ export default async function ThemePreview({
 
   return (
     <div
+      data-btn={theme.layout.ghostBtn ? "ghost" : "solid"}
       style={
         {
           ...vars,

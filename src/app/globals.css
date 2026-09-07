@@ -118,6 +118,17 @@ body {
 }
 .t-btn:hover { filter: brightness(0.92); }
 
+/* ธีม minimal (9a): ปุ่มหลักเป็นเส้นใต้ ไม่ใช่ปุ่มทึบ */
+[data-btn="ghost"] .t-btn,
+.t-btn[data-ghost="1"] {
+  background: transparent;
+  color: var(--t-ink);
+  border-radius: 0;
+  border-bottom: 1px solid var(--t-ink);
+  padding-left: 0;
+  padding-right: 0;
+}
+
 /* การ์ด — พื้น/กรอบ/มุม/เงา ตามธีม */
 .t-card {
   background: var(--t-card, transparent);
