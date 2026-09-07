@@ -3,7 +3,10 @@ import { COOKIE } from "@/lib/auth-const";
 
 export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
-  if (!pathname.startsWith("/admin")) return NextResponse.next();
+  // /theme-preview = พรีวิวธีมของแอดมิน ต้องกันเหมือน /admin ทุกประการ
+  const guarded =
+    pathname.startsWith("/admin") || pathname.startsWith("/theme-preview");
+  if (!guarded) return NextResponse.next();
 
   // instance ทดลองธีม (DB read-only) -> ปิดหลังบ้านสนิท กันหน้า error ดิบ
   // แก้ข้อมูลได้ที่ condo.thanadon.com ตัวจริงเท่านั้น
@@ -21,5 +24,5 @@ export function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*", "/theme-preview/:path*"],
 };

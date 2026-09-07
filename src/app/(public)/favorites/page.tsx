@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Section } from "@/components/Section";
 import FavoritesList from "@/components/FavoritesList";
 import { listProperties, coverMap } from "@/lib/queries";
+import { getActiveTheme } from "@/lib/active-theme";
 
 export const revalidate = 3600;
 
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
 };
 
 export default function FavoritesPage() {
+  const theme = getActiveTheme();
   return (
     <Section
       as="h1"
@@ -23,6 +25,7 @@ export default function FavoritesPage() {
       <FavoritesList
         all={listProperties()}
         covers={coverMap(listProperties().map((p) => p.id))}
+        theme={theme}
       />
     </Section>
   );

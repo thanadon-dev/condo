@@ -21,7 +21,7 @@ export function Section({
         <header className="mb-10">
           {kicker && <div className="kicker">{kicker}</div>}
           {title && (
-            <Heading className="display text-[38px] md:text-[46px] mt-2.5 th">
+            <Heading className={`mt-2.5 ${as === "h1" ? "t-h1" : "t-h2"}`}>
               {title}
             </Heading>
           )}

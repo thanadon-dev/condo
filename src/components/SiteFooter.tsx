@@ -25,12 +25,15 @@ export default function SiteFooter() {
   const SITE = getSettings();
   const year = new Date().getFullYear() + 543;
   return (
-    <footer className="border-t border-line-2 bg-sand/60 mt-24">
+    <footer className="t-footer mt-24">
       <div className="mx-auto max-w-[1240px] px-6 py-16 grid gap-12 md:grid-cols-4">
         <div className="md:col-span-2">
-          <div className="display text-[24px]">Condo D</div>
+          <div className="serif text-[24px]">Condo D</div>
           <div className="kicker mt-1">Property</div>
-          <p className="th mt-5 text-[13.5px] leading-relaxed text-muted max-w-[320px]">
+          <p
+            className="th mt-5 text-[13.5px] leading-relaxed max-w-[320px]"
+            style={{ color: "var(--t-footer-muted)" }}
+          >
             {SITE.tagline}
           </p>
         </div>
@@ -38,10 +41,10 @@ export default function SiteFooter() {
         {COLS.map((c) => (
           <div key={c.title}>
             <div className="kicker mb-4">{c.title}</div>
-            <ul className="space-y-2.5 th text-[13.5px] text-ink-2">
+            <ul className="space-y-2.5 th text-[13.5px]">
               {c.links.map((l) => (
                 <li key={l.href + l.label}>
-                  <Link href={l.href} className="hover:text-ink">
+                  <Link href={l.href}>
                     {l.label}
                   </Link>
                 </li>
@@ -52,16 +55,19 @@ export default function SiteFooter() {
 
         <div>
           <div className="kicker mb-4">ติดต่อ</div>
-          <ul className="space-y-2.5 th text-[13.5px] text-ink-2">
-            <li>{SITE.phone}</li>
+          <ul className="space-y-2.5 th text-[13.5px]">
+            <li className="num">{SITE.phone}</li>
             <li>{SITE.email}</li>
             <li className="leading-relaxed">{SITE.address}</li>
           </ul>
         </div>
       </div>
 
-      <div className="border-t border-line-2">
-        <div className="mx-auto max-w-[1240px] px-6 py-6 th text-[12px] text-muted flex flex-wrap gap-x-6 gap-y-2 justify-between">
+      <div style={{ borderTop: "1px solid var(--t-footer-line)" }}>
+        <div
+          className="mx-auto max-w-[1240px] px-6 py-6 th text-[12px] flex flex-wrap gap-x-6 gap-y-2 justify-between"
+          style={{ color: "var(--t-footer-muted)" }}
+        >
           <span>
             © {year} {SITE.name} Co., Ltd.
           </span>
@@ -70,7 +76,7 @@ export default function SiteFooter() {
               href="https://thanadon.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-ink-2 transition-colors"
+              className="transition-colors"
             >
               Develop By Thanadon-dev
             </a>

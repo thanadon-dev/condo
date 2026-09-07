@@ -21,6 +21,7 @@ import { decodeSlug } from "@/lib/route";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumb } from "@/lib/jsonld";
 import CopyLink from "@/components/CopyLink";
+import { getActiveTheme } from "@/lib/active-theme";
 
 export const revalidate = 3600;
 export const dynamicParams = true;
@@ -66,6 +67,7 @@ export default async function PropertyPage({
   const pois = poisOf(p.id);
   const suggested = suggestedProperties(p);
   const suggestedCovers = coverMap(suggested.map((n) => n.id));
+  const theme = getActiveTheme();
   const specs = [
     { k: "ประเภท", v: p.type },
     { k: "ห้องนอน", v: String(p.beds) },
@@ -298,7 +300,7 @@ export default async function PropertyPage({
                       {n.reason}
                     </span>
                   )}
-                  <PropertyCard p={n} cover={suggestedCovers[n.id]} />
+                  <PropertyCard p={n} cover={suggestedCovers[n.id]} theme={theme} />
                 </div>
               ))}
             </div>

@@ -8,6 +8,7 @@ import { searchProperties, propertyFacets, coverMap } from "@/lib/queries";
 import { parseFilters, isFiltered, describeFilters } from "@/lib/filters";
 import JsonLd from "@/components/JsonLd";
 import { itemList, breadcrumb } from "@/lib/jsonld";
+import { getActiveTheme } from "@/lib/active-theme";
 
 export const revalidate = 3600;
 
@@ -40,6 +41,7 @@ async function Results({ searchParams }: { searchParams: SP }) {
   const facets = propertyFacets();
   const items = searchProperties(f);
   const covers = coverMap(items.map((p) => p.id));
+  const theme = getActiveTheme();
 
   return (
     <>
@@ -64,6 +66,7 @@ async function Results({ searchParams }: { searchParams: SP }) {
               p={p}
               cover={covers[p.id]}
               priority={i < 3}
+              theme={theme}
             />
           ))}
         </div>

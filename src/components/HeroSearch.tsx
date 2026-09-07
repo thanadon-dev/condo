@@ -65,12 +65,13 @@ export default function HeroSearch({
   }
 
   const label = "text-[9.5px] tracking-[0.3em] uppercase text-dim";
+  // color: inherit ไม่พอ — select/option ใน Chrome ใช้สีระบบถ้าไม่กำหนด
   const field =
-    "th w-full text-[15px] text-ink bg-transparent border-0 outline-none p-0";
+    "th w-full text-[15px] bg-transparent border-0 outline-none p-0 text-ink [&>option]:text-black";
 
   return (
     <>
-      <div className="bg-paper border border-line-2 shadow-[0_24px_60px_-30px_rgba(20,20,20,0.34)] grid grid-cols-1 md:grid-cols-[1.35fr_.95fr_1.3fr_auto] items-stretch">
+      <div className="t-panel overflow-hidden grid grid-cols-1 md:grid-cols-[1.35fr_.95fr_1.3fr_auto] items-stretch">
         <label className="px-[26px] py-5 flex flex-col gap-[7px] border-b md:border-b-0 md:border-r border-line-2">
           <span className={label}>ทำเล / โครงการ</span>
           <input
@@ -108,7 +109,7 @@ export default function HeroSearch({
         <div className="px-[26px] py-[18px] flex flex-col gap-1 border-b md:border-b-0 md:border-r border-line-2">
           <div className="flex justify-between items-baseline gap-3">
             <span className={label}>ค่าเช่า</span>
-            <span className="th text-[13px] text-ink whitespace-nowrap">
+            <span className="num text-[13px] text-ink whitespace-nowrap">
               {priceLabel}
             </span>
           </div>
@@ -134,7 +135,7 @@ export default function HeroSearch({
 
         <button
           onClick={push}
-          className="th text-[12px] tracking-[0.16em] px-[46px] py-5 bg-ink text-paper hover:bg-[#2c2a27] transition-colors"
+          className="t-btn th text-[12px] tracking-[0.12em] px-[46px] py-5"
         >
           ค้นหา
         </button>
@@ -152,9 +153,14 @@ export default function HeroSearch({
               onClick={() => chip(c)}
               className={`th text-[12.5px] px-[18px] py-2.5 border transition-colors ${
                 on
-                  ? "bg-ink text-paper border-ink"
-                  : "bg-paper border-line-2 text-ink-2 hover:border-ink hover:text-ink"
+                  ? "t-btn border-transparent"
+                  : "border-line-2 text-ink-2 hover:border-ink hover:text-ink"
               }`}
+              style={{
+                borderRadius: "var(--t-radius-pill)",
+                // ธีมมืดที่ --t-card เป็น transparent ต้องมีพื้นของตัวเอง ไม่งั้นชิปหายไปกับพื้น
+                background: on ? undefined : "var(--t-panel-bg)",
+              }}
             >
               {c}
             </button>

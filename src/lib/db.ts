@@ -32,6 +32,7 @@ export function db(): DatabaseSync {
       "schema-005-pin.sql",
       "schema-006-settings.sql",
       "schema-007-slug-aliases.sql",
+      "schema-008-theme.sql",
     ]) {
       conn.exec(readFileSync(path.join(process.cwd(), "src/lib", f), "utf8"));
     }

@@ -1,28 +1,53 @@
 @import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
 
+/*
+ * ระบบธีม
+ * ---------
+ * ค่าจริงของสี/ฟอนต์อยู่ใน src/lib/themes.ts แล้ว inject เป็น --t-* ที่ <html>
+ * ตัวแปร --color-* ด้านล่างชี้มาที่ --t-* ทั้งหมด
+ * -> class เดิมทั้งเว็บ (bg-paper, text-ink, border-line-2 ...) เปลี่ยนตามธีมเอง
+ *    โดยไม่ต้องแก้หน้าไหนเลย
+ *
+ * ค่า fallback ในวงเล็บ = ธีม editorial (1a) กันหน้าขาวถ้า inject ไม่ทัน
+ */
 @theme {
-  --color-ink: #141414;
-  --color-ink-2: #3d3b38;
-  --color-muted: #6b6862;
-  --color-dim: #8a8783;
-  --color-faint: #a8a5a0;
-  --color-line: #dcdad5;
-  --color-line-2: #ecece8;
-  --color-sand: #f4f3f0;
-  --color-sand-2: #f7f6f4;
-  --color-paper: #ffffff;
+  --color-ink: var(--t-ink, #141414);
+  --color-ink-2: var(--t-ink-2, #3d3b38);
+  --color-muted: var(--t-muted, #6b6862);
+  --color-dim: var(--t-dim, #8a8783);
+  --color-faint: var(--t-faint, #a8a5a0);
+  --color-line: var(--t-line, #dcdad5);
+  --color-line-2: var(--t-line-2, #ecece8);
+  --color-sand: var(--t-bg-2, #f4f3f0);
+  --color-sand-2: var(--t-bg-3, #f7f6f4);
+  --color-paper: var(--t-bg, #ffffff);
 
-  --font-display: var(--font-cormorant), Georgia, serif;
-  --font-sans: var(--font-jost), var(--font-noto-thai), sans-serif;
+  /* สีเน้นของธีม (ปุ่มหลัก/ตัวเลข/ไฮไลต์) */
+  --color-accent: var(--t-accent, #141414);
+  --color-accent-ink: var(--t-accent-ink, #ffffff);
+
+  /* พื้นการ์ด — บางธีมโปร่ง บางธีมมีพื้นของตัวเอง */
+  --color-card: var(--t-card, #ffffff);
+  --color-card-line: var(--t-card-border, transparent);
+
+  --font-display: var(--t-font-display);
+  --font-sans: var(--t-font-body);
+
+  --radius-theme: var(--t-radius, 0px);
+  --radius-pill: var(--t-radius-pill, 0px);
 }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  /* ธีมมืดต้องบอกเบราว์เซอร์ ไม่งั้น scrollbar/ฟอร์มยังเป็นโทนสว่าง */
+  color-scheme: var(--t-scheme, light);
+}
 
 body {
-  background: var(--color-paper);
-  color: var(--color-ink);
-  font-family: var(--font-jost), var(--font-noto-thai), sans-serif;
+  background: var(--t-bg, #ffffff);
+  color: var(--t-ink, #141414);
+  font-family: var(--t-font-body);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -30,24 +55,98 @@ body {
 @media (max-width: 640px) { .wrap { padding-inline: 22px; } }
 
 .kicker {
-  font-family: var(--font-jost), sans-serif;
+  font-family: var(--t-font-kicker);
   font-size: 10px;
-  letter-spacing: 0.42em;
+  letter-spacing: var(--t-kicker-ls, 0.42em);
   text-transform: uppercase;
-  color: var(--color-dim);
+  color: var(--t-kicker-color, var(--t-dim));
 }
 
+/* หัวเรื่องใหญ่ — ขนาด/น้ำหนักมาจากธีม */
 .display {
-  font-family: var(--font-cormorant), var(--font-noto-thai), Georgia, serif;
-  font-weight: 300;
-  letter-spacing: -0.01em;
+  font-family: var(--t-font-display);
+  font-weight: var(--t-h2-weight, 300);
+  letter-spacing: var(--t-h1-ls, -0.01em);
 }
 
-.serif {
-  font-family: var(--font-cormorant), var(--font-noto-thai), Georgia, serif;
+.serif { font-family: var(--t-font-display); }
+
+/*
+ * .th = ฟอนต์เนื้อหาไทย ใช้กับ "ตัวเลข/ราคา" ด้วย
+ * ห้ามให้ตัวเลขใช้ฟอนต์ display ที่เป็นเซริฟ (Cormorant/Trirong/Marcellus)
+ * เพราะเป็น oldstyle figure แล้ว ฿ ทับเลขตัวแรก — เจอมาแล้วกับธีม editorial
+ */
+.th { font-family: var(--t-font-body); }
+
+/* ตัวเลขล้วน (ราคา/สถิติ) — บางธีมใช้โมโนสเปซ */
+.num {
+  font-family: var(--t-font-num);
+  font-variant-numeric: lining-nums tabular-nums;
 }
 
-.th { font-family: var(--font-noto-thai), sans-serif; }
+/* หัวเรื่องหลักของหน้า — ขนาดจากธีม (มือถือย่อลงเสมอ) */
+.t-h1 {
+  font-family: var(--t-font-display);
+  font-size: clamp(30px, 6.4vw, var(--t-h1-size, 66px));
+  font-weight: var(--t-h1-weight, 300);
+  line-height: var(--t-h1-lh, 1.08);
+  letter-spacing: var(--t-h1-ls, -0.01em);
+}
+
+.t-h2 {
+  font-family: var(--t-font-display);
+  font-size: clamp(26px, 5vw, var(--t-h2-size, 44px));
+  font-weight: var(--t-h2-weight, 300);
+  line-height: 1.14;
+  letter-spacing: var(--t-h1-ls, -0.01em);
+}
+
+.t-h3 {
+  font-family: var(--t-font-display);
+  font-size: var(--t-h3-size, 25px);
+  font-weight: var(--t-h3-weight, 400);
+  line-height: 1.28;
+}
+
+/* ปุ่มหลักของธีม */
+.t-btn {
+  background: var(--t-accent);
+  color: var(--t-accent-ink);
+  border-radius: var(--t-radius-pill, 0px);
+  font-family: var(--t-font-body);
+  transition: filter 0.2s;
+}
+.t-btn:hover { filter: brightness(0.92); }
+
+/* การ์ด — พื้น/กรอบ/มุม/เงา ตามธีม */
+.t-card {
+  background: var(--t-card, transparent);
+  border: var(--t-card-border-w, 0px) solid var(--t-card-border, transparent);
+  border-radius: var(--t-radius, 0px);
+  box-shadow: var(--t-card-shadow, none);
+}
+
+/*
+ * กล่องแบบมีพื้นผิว (แถบค้นหา/กล่องข้อมูล)
+ * ห้ามใช้ --t-card ตรง ๆ: 4 ธีม (luxury/photo/heritage/minimal) ตั้ง --t-card:transparent
+ * เพราะการ์ดทรัพย์ไม่มีพื้น -> แถบค้นหาที่ทับรูป hero จะโปร่งจนอ่านไม่ออก
+ * ใช้ --t-panel-bg ที่ทุกธีมมีพื้นทึบเสมอ
+ */
+.t-panel {
+  background: var(--t-panel-bg, var(--t-bg));
+  border: 1px solid var(--t-line-2);
+  border-radius: var(--t-radius, 0px);
+  box-shadow: var(--t-card-shadow, 0 24px 60px -30px rgba(20, 20, 20, 0.34));
+}
+
+/* footer มีชุดสีของตัวเอง (หลายธีมเป็นบล็อกสีเข้ม) */
+.t-footer {
+  background: var(--t-footer, var(--t-bg-2));
+  color: var(--t-footer-ink, var(--t-ink));
+  border-top: 1px solid var(--t-footer-line, var(--t-line-2));
+}
+.t-footer .kicker { color: var(--t-footer-muted, var(--t-dim)); }
+.t-footer a:hover { color: var(--t-accent); }
 
 input[type="range"] {
   -webkit-appearance: none;
@@ -56,16 +155,35 @@ input[type="range"] {
   height: 14px;
   cursor: pointer;
 }
-input[type="range"]::-webkit-slider-runnable-track { height: 2px; background: #dcdad5; }
+input[type="range"]::-webkit-slider-runnable-track { height: 2px; background: var(--t-line); }
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 14px; height: 14px; border-radius: 50%;
-  background: #141414; margin-top: -6px;
+  background: var(--t-accent); margin-top: -6px;
 }
-input[type="range"]::-moz-range-track { height: 2px; background: #dcdad5; }
+input[type="range"]::-moz-range-track { height: 2px; background: var(--t-line); }
 input[type="range"]::-moz-range-thumb {
-  width: 14px; height: 14px; border: 0; border-radius: 50%; background: #141414;
+  width: 14px; height: 14px; border: 0; border-radius: 50%; background: var(--t-accent);
 }
 
 @keyframes cdRise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 .rise { animation: cdRise 0.5s both; }
+
+/* แถบพรีวิวธีม (เห็นเฉพาะแอดมินที่เปิด ?theme=) */
+.theme-preview-bar {
+  position: fixed;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 16px;
+  background: #141414;
+  color: #fff;
+  font-size: 13px;
+  border-radius: 999px;
+  box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.7);
+}
+.theme-preview-bar a { text-decoration: underline; text-underline-offset: 3px; }

@@ -7,4 +7,6 @@ data/seed.json
 next-env.d.ts
 CONTEXT.md
 tsconfig.tsbuildinfo
+# ฟอนต์ที่แกะจาก bundle mockup — ไม่ใช้จริง (โปรเจกต์โหลดผ่าน next/font/google)
+design/themes-src/fonts/
 *.tsbuildinfo

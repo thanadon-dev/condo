@@ -17,6 +17,7 @@ const NAV = [
   { href: "/admin/deals", label: "ผลงาน" },
   { href: "/admin/articles", label: "บทความ" },
   { href: "/admin/leads", label: "ลูกค้า" },
+  { href: "/admin/themes", label: "ธีม" },
   { href: "/admin/settings", label: "ตั้งค่า" },
 ];
 

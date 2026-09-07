@@ -1,28 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Jost, Noto_Sans_Thai } from "next/font/google";
 import "./globals.css";
 import { SITE, SITE_URL } from "@/lib/site";
-
-const cormorant = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["300", "400", "500"],
-  variable: "--font-cormorant",
-  display: "swap",
-});
-
-const jost = Jost({
-  subsets: ["latin"],
-  weight: ["300", "400", "500"],
-  variable: "--font-jost",
-  display: "swap",
-});
-
-const notoThai = Noto_Sans_Thai({
-  subsets: ["thai"],
-  weight: ["300", "400", "500", "600"],
-  variable: "--font-noto-thai",
-  display: "swap",
-});
+import { ALL_FONT_CLASSES } from "@/lib/fonts";
+import { getActiveTheme } from "@/lib/active-theme";
+import { themeVars } from "@/lib/themes";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -67,27 +48,36 @@ export const metadata: Metadata = {
   category: "real estate",
 };
 
-export const viewport: Viewport = {
-  themeColor: "#141414",
-  colorScheme: "light",
-  width: "device-width",
-  initialScale: 1,
-};
+export function generateViewport(): Viewport {
+  const t = getActiveTheme();
+  return {
+    // แถบเบราว์เซอร์มือถือใช้สีของธีม
+    themeColor: t.vars["--t-bg"],
+    colorScheme: t.layout.dark ? "dark" : "light",
+    width: "device-width",
+    initialScale: 1,
+  };
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const theme = getActiveTheme();
+  const vars = themeVars(theme);
+
   return (
     <html
       lang="th"
-      className={`${cormorant.variable} ${jost.variable} ${notoThai.variable}`}
+      data-theme={theme.id}
+      className={ALL_FONT_CLASSES}
+      style={
+        {
+          ...vars,
+          "--t-scheme": theme.layout.dark ? "dark" : "light",
+        } as React.CSSProperties
+      }
     >
       <head>
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin=""
-        />
         <link rel="dns-prefetch" href="https://tile.openstreetmap.org" />
       </head>
       <body className="min-h-screen flex flex-col">{children}</body>

@@ -11,6 +11,7 @@ import {
 import { decodeSlug } from "@/lib/route";
 import JsonLd from "@/components/JsonLd";
 import { areaLd, itemList, breadcrumb } from "@/lib/jsonld";
+import { getActiveTheme } from "@/lib/active-theme";
 
 export const revalidate = 3600;
 export const dynamicParams = true;
@@ -54,6 +55,7 @@ export default async function AreaPage({
 
   const items = propertiesInArea(a);
   const covers = coverMap(items.map((p) => p.id));
+  const theme = getActiveTheme();
 
   return (
     <>
@@ -84,6 +86,7 @@ export default async function AreaPage({
               p={p}
               cover={covers[p.id]}
               priority={i < 3}
+              theme={theme}
             />
           ))}
         </div>
